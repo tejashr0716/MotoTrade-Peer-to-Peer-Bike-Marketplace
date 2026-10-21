@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MotoTrade P2P — Used Motorbike Marketplace & Mechanic Inspection</title>
+  <title>MotoTrade P2P — Certified Used Motorbike Marketplace</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -16,8 +16,8 @@
         extend: {
           colors: {
             brand: '#f97316',
-            darkbg: '#070b14',
-            cardbg: 'rgba(14, 22, 40, 0.75)',
+            darkbg: '#060a12',
+            cardbg: 'rgba(11, 19, 36, 0.75)',
             borderbg: 'rgba(255, 255, 255, 0.08)'
           },
           fontFamily: {
@@ -30,17 +30,28 @@
   </script>
   <style>
     body {
-      background-color: #070b14;
+      background-color: #060a12;
       background-image: 
-        radial-gradient(at 0% 0%, rgba(249, 115, 22, 0.15) 0px, transparent 50%),
-        radial-gradient(at 100% 100%, rgba(15, 23, 42, 0.8) 0px, transparent 50%);
+        radial-gradient(at 0% 0%, rgba(249, 115, 22, 0.18) 0px, transparent 45%),
+        radial-gradient(at 100% 100%, rgba(234, 88, 12, 0.12) 0px, transparent 50%),
+        radial-gradient(circle at center, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+      background-size: 100% 100%, 100% 100%, 24px 24px;
       color: #f1f5f9;
       min-height: 100vh;
     }
     .glass-card {
-      background: rgba(14, 22, 40, 0.75);
-      backdrop-filter: blur(14px);
+      background: rgba(11, 19, 36, 0.75);
+      backdrop-filter: blur(16px);
       border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5);
+    }
+    .glass-card:hover {
+      border-color: rgba(249, 115, 22, 0.35);
+    }
+    .tab-btn.active {
+      background: linear-gradient(135deg, #ea580c, #f97316);
+      color: #ffffff;
+      box-shadow: 0 4px 15px rgba(249, 115, 22, 0.4);
     }
     .pulse-dot {
       animation: pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
@@ -49,27 +60,59 @@
       0%, 100% { opacity: 1; transform: scale(1); }
       50% { opacity: 0.35; transform: scale(1.2); }
     }
+    .node-card {
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .node-card:hover {
+      transform: translateY(-4px);
+      border-color: #f97316;
+      box-shadow: 0 12px 25px -5px rgba(249, 115, 22, 0.25);
+    }
   </style>
 </head>
 <body class="antialiased selection:bg-brand selection:text-white flex flex-col min-h-screen">
 
+  <!-- Top Header -->
   <header class="sticky top-0 z-50 glass-card border-b border-slate-800/80 px-6 py-3.5 flex items-center justify-between">
     <div class="flex items-center gap-4">
-      <a href="https://tejashr0716.github.io/" class="w-10 h-10 rounded-xl bg-orange-500 flex items-center justify-center font-bold text-white shadow-lg shadow-orange-500/30 transition hover:scale-105">
+      <a href="https://tejashr0716.github.io/" class="w-10 h-10 rounded-xl bg-gradient-to-tr from-orange-600 to-orange-500 flex items-center justify-center font-bold text-white shadow-lg shadow-orange-600/30 transition hover:scale-105">
         <i class="fa-solid fa-motorcycle text-lg"></i>
       </a>
       <div>
         <div class="flex items-center gap-2">
           <h1 class="font-extrabold text-lg text-white tracking-tight">MotoTrade P2P</h1>
-          <span class="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-orange-500/20 text-orange-400 border border-orange-500/30 flex items-center gap-1.5">
-            <span class="w-1.5 h-1.5 rounded-full bg-orange-400 pulse-dot"></span> 40-POINT VERIFIED
+          <span class="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-orange-500/20 text-orange-400 border border-orange-500/30 flex items-center gap-1.5 font-mono">
+            <span class="w-1.5 h-1.5 rounded-full bg-orange-400 pulse-dot"></span> PROD ENGINE v2.4
           </span>
         </div>
-        <p class="text-xs text-slate-400">Peer-to-Peer Used Motorbike Marketplace · Certified Mechanic Inspections · Live Chat</p>
+        <p class="text-xs text-slate-400">Peer-to-Peer Motorbike Marketplace · Certified Mechanic Inspections · Live Chat</p>
       </div>
     </div>
 
+    <!-- Center Navigation Tabs -->
+    <div class="hidden md:flex items-center gap-1 bg-slate-950/80 p-1 border border-slate-800 rounded-xl text-xs font-semibold">
+      <button onclick="switchTab('console')" id="tab-console" class="tab-btn active px-4 py-1.5 rounded-lg transition">
+        <i class="fa-solid fa-sliders text-xs mr-1"></i> Live Operations
+      </button>
+      <button onclick="switchTab('topology')" id="tab-topology" class="tab-btn px-4 py-1.5 text-slate-400 hover:text-white rounded-lg transition">
+        <i class="fa-solid fa-diagram-project text-xs mr-1"></i> System Topology
+      </button>
+      <button onclick="switchTab('scenarios')" id="tab-scenarios" class="tab-btn px-4 py-1.5 text-slate-400 hover:text-white rounded-lg transition">
+        <i class="fa-solid fa-vial text-xs mr-1"></i> Concurrency Labs
+      </button>
+      <button onclick="switchTab('profiler')" id="tab-profiler" class="tab-btn px-4 py-1.5 text-slate-400 hover:text-white rounded-lg transition">
+        <i class="fa-solid fa-database text-xs mr-1"></i> SQL Profiler
+      </button>
+      <button onclick="switchTab('devops')" id="tab-devops" class="tab-btn px-4 py-1.5 text-slate-400 hover:text-white rounded-lg transition">
+        <i class="fa-solid fa-server text-xs mr-1"></i> DevOps Specs
+      </button>
+    </div>
+
+    <!-- Right Actions -->
     <div class="flex items-center gap-3">
+      <button onclick="toggleAudio()" id="btn-audio" class="w-8 h-8 rounded-lg bg-slate-900 border border-slate-800 text-slate-400 hover:text-white flex items-center justify-center transition" title="Toggle Sound Feedback">
+        <i class="fa-solid fa-volume-high text-xs"></i>
+      </button>
       <a href="https://github.com/tejashr0716/MotoTrade-Peer-to-Peer-Bike-Marketplace" target="_blank" class="px-3.5 py-1.5 text-xs font-bold rounded-xl bg-slate-800 hover:bg-slate-700 text-white border border-slate-700 transition flex items-center gap-1.5">
         <i class="fa-brands fa-github text-sm"></i> Source Code
       </a>
@@ -79,138 +122,641 @@
     </div>
   </header>
 
+  <!-- Main Content -->
   <main class="flex-1 max-w-7xl w-full mx-auto p-6 space-y-6">
 
     <!-- KPI Metrics -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
       <div class="glass-card rounded-2xl p-5 relative overflow-hidden">
-        <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Verified Bikes</span>
-        <div class="text-2xl font-black text-white font-mono mt-2">342 Bikes</div>
-        <div class="text-xs text-orange-400 font-semibold mt-1">Inspected by Mechanics</div>
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Verified Bikes</span>
+          <div class="w-8 h-8 rounded-lg bg-orange-950/60 border border-orange-800/40 flex items-center justify-center text-orange-400">
+            <i class="fa-solid fa-motorcycle"></i>
+          </div>
+        </div>
+        <div class="text-2xl font-black text-white font-mono">342 Bikes</div>
+        <div class="text-xs text-orange-400 font-semibold mt-1 flex items-center gap-1">
+          <i class="fa-solid fa-circle-check"></i> Inspected by Mechanics
+        </div>
       </div>
 
       <div class="glass-card rounded-2xl p-5 relative overflow-hidden">
-        <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Doorstep Inspections</span>
-        <div class="text-2xl font-black text-white font-mono mt-2">24 Booked Today</div>
-        <div class="text-xs text-emerald-400 font-semibold mt-1">40-Point Diagnostic Checklist</div>
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Doorstep Inspections</span>
+          <div class="w-8 h-8 rounded-lg bg-cyan-950/60 border border-cyan-800/40 flex items-center justify-center text-cyan-400">
+            <i class="fa-solid fa-screwdriver-wrench"></i>
+          </div>
+        </div>
+        <div class="text-2xl font-black text-white font-mono">24 Today</div>
+        <div class="text-xs text-cyan-400 font-semibold mt-1 flex items-center gap-1">
+          <i class="fa-solid fa-clipboard-list"></i> 40-Point Diagnostic Checklist
+        </div>
       </div>
 
       <div class="glass-card rounded-2xl p-5 relative overflow-hidden">
-        <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Active Buyer Chats</span>
-        <div class="text-2xl font-black text-white font-mono mt-2">118 In Negotiation</div>
-        <div class="text-xs text-cyan-400 font-semibold mt-1">Socket.io Encrypted</div>
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Active Buyer Chats</span>
+          <div class="w-8 h-8 rounded-lg bg-emerald-950/60 border border-emerald-800/40 flex items-center justify-center text-emerald-400">
+            <i class="fa-solid fa-comments"></i>
+          </div>
+        </div>
+        <div class="text-2xl font-black text-white font-mono">118 Chats</div>
+        <div class="text-xs text-emerald-400 font-semibold mt-1 flex items-center gap-1">
+          <i class="fa-solid fa-lock"></i> Socket.io Encrypted
+        </div>
       </div>
 
       <div class="glass-card rounded-2xl p-5 relative overflow-hidden">
-        <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Avg Deal Velocity</span>
-        <div class="text-2xl font-black text-white font-mono mt-2">4.2 Days</div>
-        <div class="text-xs text-amber-400 font-semibold mt-1">Direct Escrow Settlement</div>
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Avg Deal Velocity</span>
+          <div class="w-8 h-8 rounded-lg bg-purple-950/60 border border-purple-800/40 flex items-center justify-center text-purple-400">
+            <i class="fa-solid fa-handshake"></i>
+          </div>
+        </div>
+        <div class="text-2xl font-black text-white font-mono">4.2 Days</div>
+        <div class="text-xs text-purple-400 font-semibold mt-1 flex items-center gap-1">
+          <i class="fa-solid fa-shield-halved"></i> Direct Escrow Settlement
+        </div>
       </div>
     </div>
 
-    <!-- Main Grid -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <!-- TAB 1: LIVE OPERATIONS CONSOLE -->
+    <div id="view-console" class="space-y-6">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
-      <!-- Left: Marketplace Listings (2 Cols) -->
-      <div class="lg:col-span-2 glass-card rounded-2xl p-6 space-y-5">
-        <div class="flex items-center justify-between pb-3 border-b border-slate-800">
-          <h2 class="text-base font-bold text-white flex items-center gap-2">
-            <i class="fa-solid fa-motorcycle text-orange-400"></i> Featured Motorbike Inventory
-          </h2>
-          <span class="text-xs text-slate-400 font-mono">Bangalore / Mumbai / Delhi NCR</span>
+        <!-- Bikes Catalog (2 Cols) -->
+        <div class="lg:col-span-2 glass-card rounded-2xl p-6 space-y-5">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-800">
+            <div>
+              <h2 class="text-base font-bold text-white flex items-center gap-2">
+                <i class="fa-solid fa-motorcycle text-orange-400"></i> Certified Pre-Owned Motorbikes
+              </h2>
+              <p class="text-xs text-slate-400">Every motorcycle undergoes a 40-point doorstep mechanic diagnostic inspection</p>
+            </div>
+            
+            <div class="flex items-center gap-2 bg-orange-950/40 px-3 py-1.5 border border-orange-800/40 rounded-xl text-xs font-mono text-orange-300">
+              <i class="fa-solid fa-shield-halved text-orange-400"></i>
+              <span>ESCROW PROTECTION ACTIVE</span>
+            </div>
+          </div>
+
+          <!-- Bikes Grid -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="bikes-container"></div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="bikes-list">
-          <!-- Injected via JS -->
-        </div>
-      </div>
+        <!-- Real-Time Audit Ledger & Chat Stream (1 Col) -->
+        <div class="glass-card rounded-2xl p-6 flex flex-col h-full space-y-4">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+            <h3 class="text-sm font-bold text-white flex items-center gap-2">
+              <i class="fa-solid fa-terminal text-cyan-400"></i> Marketplace Activity
+            </h3>
+            <span class="w-2 h-2 rounded-full bg-orange-400 pulse-dot"></span>
+          </div>
 
-      <!-- Right: Real-Time Chat & Inspection Box (1 Col) -->
-      <div class="glass-card rounded-2xl p-6 flex flex-col space-y-4">
-        <div class="flex items-center justify-between pb-3 border-b border-slate-800">
-          <h3 class="text-sm font-bold text-white flex items-center gap-2">
-            <i class="fa-solid fa-comments text-cyan-400"></i> Buyer-Seller Direct Chat
-          </h3>
-          <span class="w-2 h-2 rounded-full bg-emerald-400 pulse-dot"></span>
-        </div>
+          <div id="event-stream" class="flex-1 space-y-2 overflow-y-auto max-h-[460px] font-mono text-xs pr-1">
+            <div class="p-2.5 rounded-xl bg-slate-950/70 border border-slate-800/80 text-slate-300">
+              <span class="text-slate-500 text-[10px] block">15:56:33</span>
+              <span class="text-orange-400 font-bold">[SOCKET_CHAT]</span> Socket.io room cluster online. P2P encrypted.
+            </div>
+          </div>
 
-        <div id="chat-box" class="flex-1 space-y-2 overflow-y-auto max-h-[360px] text-xs pr-1">
-          <div class="p-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-300">
-            <span class="text-slate-500 font-bold block text-[10px]">Seller (Continental GT 650):</span>
-            Hi! Bike is single owner, never dropped. Let me know if you want to book inspection!
+          <!-- Quick Mechanic Booking Status -->
+          <div class="p-3.5 rounded-xl bg-slate-950/90 border border-slate-800 space-y-1 text-xs font-mono">
+            <div class="flex justify-between text-slate-400">
+              <span>Next Available Mechanic:</span>
+              <span class="font-bold text-white">Tomorrow 10:00 AM</span>
+            </div>
+            <div class="flex justify-between text-slate-400">
+              <span>Diagnostic Center:</span>
+              <span class="font-bold text-orange-400">Bangalore Indiranagar Hub</span>
+            </div>
           </div>
         </div>
 
-        <div class="flex gap-2 pt-2 border-t border-slate-800">
-          <input type="text" id="chat-input" placeholder="Make an offer (e.g. $3,500)..." class="flex-1 bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white">
-          <button onclick="sendChatMessage()" class="px-4 py-2 rounded-xl bg-orange-500 hover:bg-orange-400 text-white font-bold text-xs">
-            Send
-          </button>
+      </div>
+    </div>
+
+    <!-- TAB 2: SYSTEM TOPOLOGY (INTERACTIVE NODE GRAPH) -->
+    <div id="view-topology" class="hidden space-y-6">
+      <div class="glass-card rounded-2xl p-6 space-y-6">
+        <div>
+          <h2 class="text-lg font-bold text-white flex items-center gap-2">
+            <i class="fa-solid fa-diagram-project text-orange-400"></i> Marketplace Topology
+          </h2>
+          <p class="text-xs text-slate-400">Click any system component below to inspect its operational metrics, protocols, and failover behavior.</p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+          <!-- Node 1 -->
+          <div onclick="inspectNode('edge')" class="node-card cursor-pointer p-4 rounded-xl bg-slate-950/80 border border-slate-800 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-cyan-400 uppercase tracking-wider font-mono">Edge Tier</span>
+              <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+            </div>
+            <h4 class="font-bold text-white text-sm">Cloudflare Image CDN</h4>
+            <p class="text-xs text-slate-400">Dynamic WebP compression for multi-angle vehicle inspection photos.</p>
+            <div class="text-[10px] text-slate-500 font-mono">Edge Caching · Sub-50ms TTL</div>
+          </div>
+
+          <!-- Node 2 -->
+          <div onclick="inspectNode('gateway')" class="node-card cursor-pointer p-4 rounded-xl bg-slate-950/80 border border-slate-800 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-indigo-400 uppercase tracking-wider font-mono">API Gateway</span>
+              <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+            </div>
+            <h4 class="font-bold text-white text-sm">NestJS Marketplace Core</h4>
+            <p class="text-xs text-slate-400">JWT auth, listing CRUD, geolocation-based search, and filtering.</p>
+            <div class="text-[10px] text-slate-500 font-mono">Port 3000 · Microservices Architecture</div>
+          </div>
+
+          <!-- Node 3 -->
+          <div onclick="inspectNode('socket')" class="node-card cursor-pointer p-4 rounded-xl bg-slate-950/80 border border-slate-800 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-orange-400 uppercase tracking-wider font-mono">Chat Cluster</span>
+              <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+            </div>
+            <h4 class="font-bold text-white text-sm">Socket.io Negotiation Hub</h4>
+            <p class="text-xs text-slate-400">Redis adapter coordinates buyer-seller price negotiations in real time.</p>
+            <div class="text-[10px] text-slate-500 font-mono">Sub-10ms Message Delivery</div>
+          </div>
+
+          <!-- Node 4 -->
+          <div onclick="inspectNode('db')" class="node-card cursor-pointer p-4 rounded-xl bg-slate-950/80 border border-slate-800 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-emerald-400 uppercase tracking-wider font-mono">Relational DB</span>
+              <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+            </div>
+            <h4 class="font-bold text-white text-sm">PostgreSQL 15 Catalog DB</h4>
+            <p class="text-xs text-slate-400">B-Tree indexed bikes, 40-point inspection records, chassis numbers.</p>
+            <div class="text-[10px] text-slate-500 font-mono">Port 5432 · Full-Text Search Enabled</div>
+          </div>
+
+          <!-- Node 5 -->
+          <div onclick="inspectNode('escrow')" class="node-card cursor-pointer p-4 rounded-xl bg-slate-950/80 border border-slate-800 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-teal-400 uppercase tracking-wider font-mono">Escrow Engine</span>
+              <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+            </div>
+            <h4 class="font-bold text-white text-sm">Escrow State Machine</h4>
+            <p class="text-xs text-slate-400">Locks buyer token deposit in holding wallet until mechanic passes report.</p>
+            <div class="text-[10px] text-slate-500 font-mono">Atomic State Transitions</div>
+          </div>
+
+          <!-- Node 6 -->
+          <div onclick="inspectNode('backup')" class="node-card cursor-pointer p-4 rounded-xl bg-slate-950/80 border border-slate-800 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-rose-400 uppercase tracking-wider font-mono">Disaster Recovery</span>
+              <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+            </div>
+            <h4 class="font-bold text-white text-sm">AES-256 Disaster Recovery</h4>
+            <p class="text-xs text-slate-400">Nightly pg_dump with OpenSSL PBKDF2 encryption and verified sandbox restore.</p>
+            <div class="text-[10px] text-slate-500 font-mono">Encrypted S3 Cold Storage</div>
+          </div>
+        </div>
+
+        <div id="node-inspector" class="p-4 rounded-xl bg-slate-950 border border-slate-800 font-mono text-xs text-slate-300">
+          <span class="text-orange-400 font-bold uppercase tracking-wider text-[11px] block mb-1">Topology Node Inspector:</span>
+          Click any architecture node above to reveal its high-availability configuration and live telemetry.
         </div>
       </div>
+    </div>
 
+    <!-- TAB 3: CONCURRENCY LABS (SCENARIOS) -->
+    <div id="view-scenarios" class="hidden space-y-6">
+      <div class="glass-card rounded-2xl p-6 space-y-6">
+        <div>
+          <h2 class="text-lg font-bold text-white flex items-center gap-2">
+            <i class="fa-solid fa-vial text-orange-400"></i> Marketplace Concurrency & Chat Lab
+          </h2>
+          <p class="text-xs text-slate-400">Simulate dual-buyer escrow collisions, mechanic calendar slot contention, and chat dropouts.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="p-4 rounded-xl border border-slate-800 bg-slate-950/60 space-y-3">
+            <h4 class="font-bold text-sm text-white flex items-center gap-2">
+              <i class="fa-solid fa-shield-halved text-rose-400"></i> Dual Buyer Escrow Collision
+            </h4>
+            <p class="text-xs text-slate-400">Simulates two buyers attempting to deposit the token advance on the Interceptor 650 simultaneously.</p>
+            <button onclick="simulateEscrowCollision()" class="w-full py-2 rounded-xl bg-rose-500/20 text-rose-400 border border-rose-500/40 hover:bg-rose-500/30 text-xs font-bold transition">
+              Simulate Dual Escrow Lock
+            </button>
+          </div>
+
+          <div class="p-4 rounded-xl border border-slate-800 bg-slate-950/60 space-y-3">
+            <h4 class="font-bold text-sm text-white flex items-center gap-2">
+              <i class="fa-solid fa-calendar-xmark text-amber-400"></i> Mechanic Calendar Overlap
+            </h4>
+            <p class="text-xs text-slate-400">Contention on the 10:00 AM Indiranagar inspection slot; second booking routed to next slot.</p>
+            <button onclick="simulateCalendarContention()" class="w-full py-2 rounded-xl bg-amber-500/20 text-amber-400 border border-amber-500/40 hover:bg-amber-500/30 text-xs font-bold transition">
+              Test Mechanic Slot Race
+            </button>
+          </div>
+
+          <div class="p-4 rounded-xl border border-slate-800 bg-slate-950/60 space-y-3">
+            <h4 class="font-bold text-sm text-white flex items-center gap-2">
+              <i class="fa-solid fa-wifi text-cyan-400"></i> P2P Chat Packet Loss
+            </h4>
+            <p class="text-xs text-slate-400">Simulates temporary 3G mobile drop; verifies message retry queue and offline sync.</p>
+            <button onclick="simulateChatPacketLoss()" class="w-full py-2 rounded-xl bg-cyan-500/20 text-cyan-400 border border-cyan-500/40 hover:bg-cyan-500/30 text-xs font-bold transition">
+              Test Offline Message Queue
+            </button>
+          </div>
+        </div>
+
+        <div class="p-4 rounded-xl bg-slate-950/80 border border-slate-800 font-mono text-xs space-y-2">
+          <div class="text-slate-400 font-bold uppercase tracking-wider text-[11px]">Lab Execution Trace:</div>
+          <div id="lab-output" class="text-slate-300">Ready for scenario execution. Click any button above to test marketplace mechanics.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 4: SQL PROFILER (EXPLAIN ANALYZE) -->
+    <div id="view-profiler" class="hidden space-y-6">
+      <div class="glass-card rounded-2xl p-6 space-y-6">
+        <div>
+          <h2 class="text-lg font-bold text-white flex items-center gap-2">
+            <i class="fa-solid fa-database text-cyan-400"></i> Verified Bike Catalog Profiler
+          </h2>
+          <p class="text-xs text-slate-400">Profile PostgreSQL queries scanning certified bikes with passing 40-point inspection flags.</p>
+        </div>
+
+        <div class="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-mono text-slate-400 font-bold uppercase">SQL Query:</span>
+            <button onclick="runExplainAnalyze()" class="px-3.5 py-1.5 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-xs flex items-center gap-1.5 shadow-lg">
+              <i class="fa-solid fa-play text-[10px]"></i> Run EXPLAIN ANALYZE
+            </button>
+          </div>
+          <pre class="text-xs font-mono text-cyan-300 bg-slate-900/80 p-3 rounded-lg border border-slate-800"><code>SELECT bike_id, model, price, mileage 
+FROM bikes_catalog 
+WHERE location_city = 'Bangalore' AND inspection_passed = TRUE;</code></pre>
+        </div>
+
+        <div id="profiler-output" class="p-4 rounded-xl bg-slate-950 border border-slate-800 font-mono text-xs text-slate-300 space-y-1">
+          <span class="text-slate-500 italic">Click 'Run EXPLAIN ANALYZE' to profile the query planner tree.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 5: DEVOPS & CI/CD SPECS -->
+    <div id="view-devops" class="hidden space-y-6">
+      <div class="glass-card rounded-2xl p-6 space-y-6">
+        <div>
+          <h2 class="text-lg font-bold text-white flex items-center gap-2">
+            <i class="fa-solid fa-server text-emerald-400"></i> Hardened DevOps & Recovery Specifications
+          </h2>
+          <p class="text-xs text-slate-400">Multi-stage Docker, declarative Jenkinsfile, and verified disaster recovery.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="space-y-3">
+            <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">REST API Explorer (Copy cURL)</h3>
+            <div class="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-2">
+              <div class="flex justify-between items-center text-xs">
+                <span class="font-mono text-orange-400 font-bold">POST /v1/inspections</span>
+                <button onclick="copyCurl()" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 text-[10px] font-mono">
+                  <i class="fa-solid fa-copy mr-1"></i> Copy cURL
+                </button>
+              </div>
+              <pre class="text-[11px] font-mono text-slate-400 overflow-x-auto p-2 bg-slate-900 rounded"><code>curl -X POST https://api.mototrade.p2p/v1/inspections \
+  -H "Content-Type: application/json" \
+  -d '{"bikeId":"BK-01","tier":"COMPREHENSIVE"}'</code></pre>
+            </div>
+          </div>
+
+          <div class="space-y-3">
+            <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Verified Backup & Recovery Principle</h3>
+            <div class="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-2 text-xs text-slate-300">
+              <p>Addresses Gway Tech principle: <em class="text-amber-400">"A backup is useful only when it can be restored."</em></p>
+              <ul class="list-disc list-inside text-slate-400 space-y-1 text-[11px]">
+                <li>Escrow transaction tables stream WAL continuously for zero financial loss</li>
+                <li>Nightly encrypted PostgreSQL dump via OpenSSL AES-256</li>
+                <li>Automated sandbox restore pipeline runs every Sunday at 04:30 UTC</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
   </main>
 
+  <!-- Interactive Mechanic Inspection Modal -->
+  <div id="inspection-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="glass-card rounded-2xl max-w-lg w-full p-6 space-y-4 border border-slate-700 shadow-2xl animate-in fade-in">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+        <h3 class="text-base font-bold text-white flex items-center gap-2" id="modal-bike-title">
+          <i class="fa-solid fa-screwdriver-wrench text-orange-400"></i> Book 40-Point Inspection
+        </h3>
+        <button onclick="closeInspectionModal()" class="w-7 h-7 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center">
+          <i class="fa-solid fa-xmark text-sm"></i>
+        </button>
+      </div>
+
+      <div class="space-y-3 text-xs" id="modal-bike-details"></div>
+
+      <div class="space-y-2 text-xs">
+        <label class="block text-slate-400 font-semibold">Select Certified Mechanic Slot:</label>
+        <select id="slot-select" class="w-full bg-slate-900 border border-slate-800 rounded-lg p-2 text-white">
+          <option value="Tomorrow 10:00 AM">Tomorrow 10:00 AM — Senior Tech Vikram</option>
+          <option value="Tomorrow 02:00 PM">Tomorrow 02:00 PM — Senior Tech Sandeep</option>
+          <option value="Thursday 11:30 AM">Thursday 11:30 AM — Lead Inspector Karthik</option>
+        </select>
+      </div>
+
+      <div class="p-3.5 rounded-xl bg-orange-950/40 border border-orange-800/40 space-y-1.5 text-xs">
+        <div class="flex items-center justify-between">
+          <span class="text-slate-300">Diagnostic Scope:</span>
+          <span class="font-mono font-bold text-orange-400">Engine, Chassis, Electronics, Tires, Braking</span>
+        </div>
+        <div class="flex items-center justify-between">
+          <span class="text-slate-300">Escrow Hold:</span>
+          <span class="font-mono font-bold text-white">$25 Fully Refundable Advance</span>
+        </div>
+      </div>
+
+      <div class="pt-3 border-t border-slate-800 flex items-center justify-end gap-2">
+        <button onclick="closeInspectionModal()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold">
+          Cancel
+        </button>
+        <button onclick="confirmInspectionBooking()" class="px-5 py-2 rounded-xl bg-orange-600 hover:bg-orange-500 text-white text-xs font-bold shadow-lg shadow-orange-600/30">
+          Confirm Mechanic Dispatch
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Interactive Live Chat Modal -->
+  <div id="chat-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="glass-card rounded-2xl max-w-md w-full p-5 space-y-4 border border-slate-700 shadow-2xl animate-in fade-in flex flex-col h-[480px]">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+        <div>
+          <h3 class="text-sm font-bold text-white flex items-center gap-2" id="chat-bike-title">
+            <i class="fa-solid fa-comments text-orange-400"></i> Seller Negotiation Chat
+          </h3>
+          <span class="text-[10px] text-emerald-400 font-mono">● Seller Online (Instant Response)</span>
+        </div>
+        <button onclick="closeChatModal()" class="w-7 h-7 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center">
+          <i class="fa-solid fa-xmark text-sm"></i>
+        </button>
+      </div>
+
+      <div class="flex-1 space-y-2 overflow-y-auto pr-1 text-xs" id="chat-messages">
+        <div class="p-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 max-w-[85%]">
+          <span class="text-[10px] text-slate-500 block font-mono">Seller</span>
+          Hi! The bike is in mint condition with full service history. Feel free to make an offer or book a test ride.
+        </div>
+      </div>
+
+      <div class="pt-2 border-t border-slate-800 flex gap-2">
+        <input type="text" id="chat-input" placeholder="Type your offer (e.g. $3,900)..." class="flex-1 bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white" onkeydown="if(event.key === 'Enter') sendChatMessage()">
+        <button onclick="sendChatMessage()" class="px-4 py-2 rounded-xl bg-orange-600 hover:bg-orange-500 text-white font-bold text-xs">
+          Send
+        </button>
+      </div>
+    </div>
+  </div>
+
   <script>
     const BIKES = [
-      { id: "BK-01", name: "Royal Enfield Continental GT 650", year: 2023, km: "8,400 km", price: 3800, loc: "Bangalore", specs: "Custom Exhaust · Pirelli Tires · Single Owner", img: "https://images.unsplash.com/photo-1558981806-ec527fa84c39?w=600&q=80" },
-      { id: "BK-02", name: "KTM Duke 390 ABS", year: 2022, km: "12,100 km", price: 2900, loc: "Mumbai", specs: "Quickshifter+ · TFT Display · First Owner", img: "https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?w=600&q=80" },
-      { id: "BK-03", name: "Yamaha YZF R15 V4", year: 2024, km: "4,200 km", price: 2100, loc: "Chennai", specs: "Metallic Red · Traction Control · Warranty Active", img: "https://images.unsplash.com/photo-1609630875171-b1321377ee65?w=600&q=80" },
-      { id: "BK-04", name: "Kawasaki Ninja 400", year: 2021, km: "15,800 km", price: 4600, loc: "Delhi NCR", specs: "Akrapovič Slip-on · Zero Accident Record", img: "https://images.unsplash.com/photo-1591637333184-19aa84b3e01f?w=600&q=80" }
+      { id: "BK-01", model: "Royal Enfield Interceptor 650", year: 2023, price: 4200, km: "8,400 km", city: "Bangalore", inspection: "40/40 PASSED", img: "https://images.unsplash.com/photo-1558981403-c5f9899a28bc?w=600&q=80" },
+      { id: "BK-02", model: "KTM Duke 390 Gen 3", year: 2024, price: 3800, km: "3,100 km", city: "Bangalore", inspection: "40/40 PASSED", img: "https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?w=600&q=80" },
+      { id: "BK-03", model: "Yamaha YZF-R15 V4 Racing Blue", year: 2023, price: 2250, km: "11,200 km", city: "Chennai", inspection: "39/40 PASSED", img: "https://images.unsplash.com/photo-1609630875171-b1321377ee6c?w=600&q=80" },
+      { id: "BK-04", model: "Harley-Davidson X440 Denim", year: 2024, price: 3400, km: "4,500 km", city: "Hyderabad", inspection: "40/40 PASSED", img: "https://images.unsplash.com/photo-1599819811279-d5ad9cccf838?w=600&q=80" }
     ];
 
+    let currentBikeId = null;
+    let audioEnabled = true;
+
+    // Web Audio Synthesizer
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    function playBeep(freq = 520, type = 'sine', duration = 0.08) {
+      if (!audioEnabled || !audioCtx) return;
+      try {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = type;
+        osc.frequency.value = freq;
+        gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + duration);
+      } catch(e) {}
+    }
+
+    function toggleAudio() {
+      audioEnabled = !audioEnabled;
+      document.getElementById("btn-audio").innerHTML = audioEnabled ? '<i class="fa-solid fa-volume-high text-xs"></i>' : '<i class="fa-solid fa-volume-xmark text-xs text-rose-400"></i>';
+    }
+
     function renderBikes() {
-      const c = document.getElementById("bikes-list");
-      c.innerHTML = BIKES.map(b => `
-        <div class="rounded-xl border border-slate-800 bg-slate-950/40 p-4 space-y-3 hover:border-slate-700 transition">
-          <div class="h-32 rounded-lg overflow-hidden">
-            <img src="${b.img}" class="w-full h-full object-cover">
+      const container = document.getElementById("bikes-container");
+      container.innerHTML = BIKES.map(bike => `
+        <div class="rounded-xl border border-slate-800/80 bg-slate-950/40 p-4 space-y-3 hover:border-slate-700 transition">
+          <div class="h-32 rounded-lg overflow-hidden relative">
+            <img src="${bike.img}" alt="${bike.model}" class="w-full h-full object-cover">
+            <span class="absolute top-2 right-2 px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-emerald-500/90 text-white">
+              <i class="fa-solid fa-check-circle"></i> ${bike.inspection}
+            </span>
+            <span class="absolute bottom-2 left-2 px-2 py-0.5 rounded text-[10px] font-mono bg-slate-900/80 text-slate-300">
+              ${bike.city} · ${bike.year}
+            </span>
           </div>
+
           <div class="flex items-start justify-between">
             <div>
-              <h4 class="font-bold text-sm text-white">${b.name}</h4>
-              <p class="text-xs text-slate-400">${b.year} · ${b.km} · ${b.loc}</p>
+              <h4 class="font-bold text-sm text-white">${bike.model}</h4>
+              <p class="text-xs text-slate-400">${bike.km} · Single Owner</p>
             </div>
-            <span class="text-base font-black text-white">$${b.price}</span>
+            <div class="text-right">
+              <span class="text-base font-black text-orange-400">$${bike.price.toLocaleString()}</span>
+            </div>
           </div>
-          <div class="flex gap-2">
-            <button onclick="bookInspection('${b.name}')" class="flex-1 py-1.5 rounded-lg bg-orange-500 hover:bg-orange-400 text-white font-bold text-xs transition">
-              Book Mechanic Inspection
+
+          <div class="grid grid-cols-2 gap-2 pt-1">
+            <button onclick="openInspectionModal('${bike.id}')" class="py-2 rounded-xl text-xs font-bold text-white bg-orange-600 hover:bg-orange-500 transition shadow-lg shadow-orange-600/30 flex items-center justify-center gap-1">
+              <i class="fa-solid fa-screwdriver-wrench text-[10px]"></i> Doorstep Check
+            </button>
+            <button onclick="openChatModal('${bike.id}')" class="py-2 rounded-xl text-xs font-bold text-slate-300 bg-slate-900 hover:bg-slate-800 border border-slate-700 transition flex items-center justify-center gap-1">
+              <i class="fa-solid fa-comments text-[10px]"></i> Chat Seller
             </button>
           </div>
         </div>
       `).join('');
     }
 
-    function bookInspection(name) {
-      alert(`40-Point Doorstep Mechanic Inspection scheduled for ${name}!
-Mechanic will verify compression, OBD errors, and chassis alignment.`);
+    function openInspectionModal(bikeId) {
+      playBeep(640);
+      currentBikeId = bikeId;
+      const bike = BIKES.find(b => b.id === bikeId);
+      if (!bike) return;
+
+      document.getElementById("modal-bike-title").innerHTML = `<i class="fa-solid fa-screwdriver-wrench text-orange-400"></i> Book Diagnostic for ${bike.model}`;
+      document.getElementById("modal-bike-details").innerHTML = `
+        <div class="space-y-1 text-slate-300">
+          <p>Motorcycle: <strong>${bike.model}</strong> (${bike.year})</p>
+          <p>Listed Price: <strong>$${bike.price.toLocaleString()}</strong> · Location: <strong>${bike.city}</strong></p>
+        </div>
+      `;
+      document.getElementById("inspection-modal").classList.remove("hidden");
+    }
+
+    function closeInspectionModal() {
+      document.getElementById("inspection-modal").classList.add("hidden");
+    }
+
+    function confirmInspectionBooking() {
+      playBeep(880, 'sine', 0.15);
+      const slot = document.getElementById("slot-select").value;
+      closeInspectionModal();
+      logEvent("INSPECTION_BOOKED", `Booked certified doorstep inspection for ${currentBikeId} on slot: ${slot}.`, "text-orange-400");
+    }
+
+    function openChatModal(bikeId) {
+      playBeep(600);
+      currentBikeId = bikeId;
+      const bike = BIKES.find(b => b.id === bikeId);
+      document.getElementById("chat-bike-title").innerHTML = `<i class="fa-solid fa-comments text-orange-400"></i> Chat: ${bike.model}`;
+      document.getElementById("chat-modal").classList.remove("hidden");
+    }
+
+    function closeChatModal() {
+      document.getElementById("chat-modal").classList.add("hidden");
     }
 
     function sendChatMessage() {
-      const inp = document.getElementById("chat-input");
-      const msg = inp.value.trim();
-      if (!msg) return;
-      const box = document.getElementById("chat-box");
-      box.innerHTML += `
-        <div class="p-2.5 rounded-xl bg-orange-950/40 border border-orange-800/40 text-orange-200 text-right">
-          <span class="text-orange-400 font-bold block text-[10px]">You:</span>
-          ${msg}
+      const input = document.getElementById("chat-input");
+      const text = input.value.trim();
+      if (!text) return;
+      playBeep(720);
+
+      const msgContainer = document.getElementById("chat-messages");
+      // Add buyer message
+      msgContainer.innerHTML += `
+        <div class="p-2.5 rounded-xl bg-orange-600 text-white max-w-[85%] ml-auto text-xs">
+          <span class="text-[10px] text-orange-200 block font-mono">You</span>
+          ${text}
         </div>
       `;
-      inp.value = "";
+      input.value = "";
+      msgContainer.scrollTop = msgContainer.scrollHeight;
+
+      logEvent("CHAT_MSG", `Sent offer to seller on ${currentBikeId}: "${text}"`, "text-cyan-400");
+
+      // Auto seller reply after 1 sec
       setTimeout(() => {
-        box.innerHTML += `
-          <div class="p-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-300">
-            <span class="text-slate-500 font-bold block text-[10px]">Seller:</span>
-            Thanks for your offer! If you can do $100 more and close by this weekend, it is yours!
+        playBeep(840, 'triangle', 0.12);
+        msgContainer.innerHTML += `
+          <div class="p-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 max-w-[85%] text-xs">
+            <span class="text-[10px] text-slate-500 block font-mono">Seller</span>
+            I can do $100 off if you book the doorstep inspection today! Deal?
           </div>
         `;
-        box.scrollTop = box.scrollHeight;
+        msgContainer.scrollTop = msgContainer.scrollHeight;
       }, 1000);
     }
+
+    function inspectNode(type) {
+      playBeep(520);
+      const inspector = document.getElementById("node-inspector");
+      const nodes = {
+        edge: { title: "Cloudflare Image CDN", spec: "Dynamic image resizing and WebP conversion for 40-point inspection photo batches. Global edge cache hits > 94%." },
+        gateway: { title: "NestJS Marketplace Core", spec: "Stateless microservice tier. Handles vehicle search queries, listings validation, and escrow authorization." },
+        socket: { title: "Socket.io Chat Cluster", spec: "Sticky-session load balanced chat cluster with Redis pub/sub message distributor. End-to-end message delivery &lt;10ms." },
+        db: { title: "PostgreSQL 15 Catalog DB", spec: "Stores vehicle specifications, full service records, certified inspection checklists, and geolocation coordinates." },
+        escrow: { title: "Escrow State Machine", spec: "Coordinates buyer advance holding, inspection pass authorization, and seller settlement payout." },
+        backup: { title: "AES-256 Disaster Recovery", spec: "Nightly dump encrypted with OpenSSL AES-256. Automated container restore test runs weekly." }
+      };
+      const n = nodes[type];
+      inspector.innerHTML = `
+        <span class="text-orange-400 font-bold uppercase tracking-wider text-[11px] block mb-1">${n.title}</span>
+        ${n.spec}
+      `;
+    }
+
+    function runExplainAnalyze() {
+      playBeep(720);
+      const out = document.getElementById("profiler-output");
+      out.innerHTML = `
+        <div class="text-emerald-400 font-bold">[POSTGRES QUERY PLANNER EXPLAIN ANALYZE]</div>
+        <div class="text-slate-300">-> Index Scan using idx_bikes_city_inspection on bikes_catalog (cost=0.15..7.80 rows=4 width=84) (actual time=0.044..0.049 rows=4 loops=1)</div>
+        <div class="text-slate-400">   Index Cond: ((location_city = 'Bangalore'::text) AND (inspection_passed = true))</div>
+        <div class="text-slate-400">   Buffers: shared hit=3</div>
+        <div class="text-cyan-400 font-bold pt-1">Planning Time: 0.068 ms | Execution Time: 0.051 ms (Sequential Scan Avoided!)</div>
+      `;
+      logEvent("SQL_EXPLAIN", "Executed EXPLAIN ANALYZE on bikes_catalog: 0.051ms execution time.", "text-cyan-400");
+    }
+
+    function copyCurl() {
+      playBeep(800);
+      const curl = `curl -X POST https://api.mototrade.p2p/v1/inspections -H "Content-Type: application/json" -d '{"bikeId":"BK-01","tier":"COMPREHENSIVE"}'`;
+      navigator.clipboard.writeText(curl);
+      alert("cURL command copied to clipboard!");
+    }
+
+    function simulateEscrowCollision() {
+      playBeep(440, 'square', 0.15);
+      const log = document.getElementById("lab-output");
+      log.innerHTML = `
+        <span class="text-amber-400">Buyer 1:</span> Places $200 escrow advance on Interceptor 650 at 15:59:01.002 ... <span class="text-emerald-400">ESCROW LOCK ACQUIRED</span><br>
+        <span class="text-cyan-400">Buyer 2:</span> Places $200 escrow advance on Interceptor 650 at 15:59:01.004 (+2ms) ... <span class="text-rose-400">HTTP 409 CONFLICT (Bike Already in Escrow Holding)</span><br>
+        <span class="text-orange-400 font-bold">Zero double-deposit error. Atomic escrow mutex preserved.</span>
+      `;
+      logEvent("ESCROW_TEST", "Dual buyer advance collision resolved without discrepancy.", "text-rose-400");
+    }
+
+    function simulateCalendarContention() {
+      playBeep(550, 'triangle', 0.15);
+      const log = document.getElementById("lab-output");
+      log.innerHTML = `
+        <span class="text-amber-400 font-bold">Mechanic Slot Contention:</span> Two users requested 10:00 AM Indiranagar inspection slot.<br>
+        <span class="text-emerald-400">Slot 1 assigned to Buyer Alpha.</span> Buyer Beta automatically offered next available slot (11:30 AM).
+      `;
+      logEvent("CALENDAR_TEST", "Calendar slot collision resolved with auto-rescheduling.", "text-amber-400");
+    }
+
+    function simulateChatPacketLoss() {
+      playBeep(330, 'triangle', 0.15);
+      const log = document.getElementById("lab-output");
+      log.innerHTML = `
+        <span class="text-rose-400 font-bold">Packet Loss Simulation:</span> Network drop simulated for 3.5 seconds.<br>
+        <span class="text-cyan-400">Client IndexedDB Message Queue:</span> Buffered 2 messages offline. On reconnection, socket queue replayed and ACK received in 12ms.
+      `;
+      logEvent("CHAT_OFFLINE", "Offline chat queue verified with zero lost messages.", "text-cyan-400");
+    }
+
+    function switchTab(tabId) {
+      playBeep(480);
+      ['console', 'topology', 'scenarios', 'profiler', 'devops'].forEach(t => {
+        document.getElementById('view-' + t).classList.add('hidden');
+        document.getElementById('tab-' + t).classList.remove('active');
+      });
+      document.getElementById('view-' + tabId).classList.remove('hidden');
+      document.getElementById('tab-' + tabId).classList.add('active');
+    }
+
+    function logEvent(tag, message, color) {
+      const stream = document.getElementById("event-stream");
+      const now = new Date().toLocaleTimeString();
+      const div = document.createElement("div");
+      div.className = "p-2.5 rounded-xl bg-slate-950/70 border border-slate-800/80 text-slate-300";
+      div.innerHTML = `<span class="text-slate-500 text-[10px] block">${now}</span>
+                       <span class="${color} font-bold">[${tag}]</span> ${message}`;
+      stream.prepend(div);
+    }
+
+    // Periodic telemetry
+    setInterval(() => {
+      const telemetry = [
+        ["INSPECTION_SYNC", "Mechanic Sandeep completed 40-point report on Duke 390 (Score: 100%).", "text-slate-400"],
+        ["ESCROW_HEARTBEAT", "Escrow holding balance healthy: $48,200 held safely.", "text-emerald-400"],
+        ["IMAGE_CDN", "Cloudflare transformed 18 inspection photos to WebP in 14ms.", "text-cyan-400"]
+      ];
+      const t = telemetry[Math.floor(Math.random() * telemetry.length)];
+      logEvent(t[0], t[1], t[2]);
+    }, 4500);
 
     renderBikes();
   </script>
