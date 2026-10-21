@@ -1,0 +1,31 @@
+name: Enterprise CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Concurrency Stress Test
+        run: node tests/concurrency_test.js
+
+      - name: Docker Build & Verification
+        run: |
+          docker build -t mototrade:test .
+          docker run --rm -d --name test_app -p 3008:3008 mototrade:test
+          sleep 3
+          docker ps
+          docker stop test_app

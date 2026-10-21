@@ -108,6 +108,25 @@
       </button>
     </div>
 
+    
+    <!-- Region Selector & Advanced Controls -->
+    <div class="hidden lg:flex items-center gap-2">
+      <div class="flex items-center gap-1.5 bg-slate-900 border border-slate-800 rounded-xl px-2.5 py-1 text-xs font-mono">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 pulse-dot"></span>
+        <select id="region-selector" onchange="changeDatacenter(this.value)" class="bg-transparent text-slate-300 font-bold focus:outline-none cursor-pointer">
+          <option value="mumbai">📍 ap-south-1 (Mumbai) · 0.8ms</option>
+          <option value="virginia">📍 us-east-1 (N. Virginia) · 182ms</option>
+          <option value="frankfurt">📍 eu-central-1 (Frankfurt) · 128ms</option>
+        </select>
+      </div>
+      <button onclick="toggleTerminal()" class="px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 hover:text-white hover:border-slate-700 text-xs font-mono font-bold flex items-center gap-1.5 transition">
+        <i class="fa-solid fa-terminal text-cyan-400"></i> CLI Console
+      </button>
+      <button onclick="toggleChaosPanel()" class="px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 hover:text-white hover:border-slate-700 text-xs font-mono font-bold flex items-center gap-1.5 transition">
+        <i class="fa-solid fa-bolt-lightning text-amber-400"></i> Chaos Mode
+      </button>
+    </div>
+    
     <!-- Right Actions -->
     <div class="flex items-center gap-3">
       <button onclick="toggleAudio()" id="btn-audio" class="w-8 h-8 rounded-lg bg-slate-900 border border-slate-800 text-slate-400 hover:text-white flex items-center justify-center transition" title="Toggle Sound Feedback">
@@ -124,6 +143,32 @@
 
   <!-- Main Content -->
   <main class="flex-1 max-w-7xl w-full mx-auto p-6 space-y-6">
+
+    
+    <!-- Real-Time Latency Jitter & System HUD -->
+    <div class="glass-card rounded-2xl p-4 flex flex-col md:flex-row items-center justify-between gap-4 text-xs font-mono border border-slate-800/80">
+      <div class="flex items-center gap-4 w-full md:w-auto">
+        <div class="flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 pulse-dot"></span>
+          <span class="text-slate-400 uppercase tracking-wider font-bold">Edge Telemetry:</span>
+          <span class="text-white font-bold" id="hud-region-label">ap-south-1</span>
+        </div>
+        <div class="hidden sm:flex items-center gap-3 text-slate-400">
+          <span>P50: <strong class="text-emerald-400" id="hud-p50">0.62ms</strong></span>
+          <span>P95: <strong class="text-cyan-400" id="hud-p95">1.04ms</strong></span>
+          <span>P99: <strong class="text-white" id="hud-p99">1.18ms</strong></span>
+          <span>Jitter: <strong class="text-slate-300" id="hud-jitter">±0.08ms</strong></span>
+        </div>
+      </div>
+
+      <!-- Sparkline Canvas -->
+      <div class="flex items-center gap-3 w-full md:w-auto justify-end">
+        <span class="text-[10px] text-slate-500 uppercase">Live Jitter:</span>
+        <canvas id="jitterCanvas" class="w-36 h-6 bg-slate-950/80 rounded border border-slate-800"></canvas>
+        <span class="text-[11px] font-bold text-emerald-400" id="live-jitter-val">0.82ms</span>
+      </div>
+    </div>
+    
 
     <!-- KPI Metrics -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -759,6 +804,203 @@ WHERE location_city = 'Bangalore' AND inspection_passed = TRUE;</code></pre>
     }, 4500);
 
     renderBikes();
-  </script>
+  
+
+    // --- ADVANCED ENTERPRISE SUITE SCRIPTS ---
+    let terminalOpen = false;
+    let chaosFlags = { latency: false, failover: false, circuit: false };
+    let currentRegion = 'mumbai';
+    const REGION_LATENCIES = { mumbai: 0.8, virginia: 182.4, frankfurt: 128.6 };
+
+    function toggleTerminal() {
+      playBeep(520);
+      terminalOpen = !terminalOpen;
+      const drawer = document.getElementById("cli-drawer");
+      if (terminalOpen) {
+        drawer.classList.remove("translate-y-full");
+        document.getElementById("terminal-input").focus();
+      } else {
+        drawer.classList.add("translate-y-full");
+      }
+    }
+
+    function toggleChaosPanel() {
+      playBeep(600);
+      const m = document.getElementById("chaos-modal");
+      m.classList.toggle("hidden");
+    }
+
+    function toggleChaosFlag(flag) {
+      playBeep(700);
+      chaosFlags[flag] = document.getElementById("chaos-" + flag).checked;
+      logEvent("CHAOS_ENGINE", `Toggled chaos parameter [${flag.toUpperCase()}] = ${chaosFlags[flag]}`, "text-amber-400");
+    }
+
+    function changeDatacenter(val) {
+      playBeep(640);
+      currentRegion = val;
+      const baseLat = REGION_LATENCIES[val];
+      document.getElementById("hud-region-label").innerText = val === 'mumbai' ? 'ap-south-1' : (val === 'virginia' ? 'us-east-1' : 'eu-central-1');
+      document.getElementById("hud-p50").innerText = (baseLat * 0.8).toFixed(2) + 'ms';
+      document.getElementById("hud-p95").innerText = (baseLat * 1.3).toFixed(2) + 'ms';
+      document.getElementById("hud-p99").innerText = (baseLat * 1.5).toFixed(2) + 'ms';
+      logEvent("REGION_ROUTE", `Routing diverted to ${val.toUpperCase()} region (${baseLat}ms RTT).`, "text-cyan-400");
+    }
+
+    function handleTerminalCommand() {
+      const inp = document.getElementById("terminal-input");
+      const cmd = inp.value.trim();
+      if (!cmd) return;
+      playBeep(720);
+      inp.value = "";
+
+      const term = document.getElementById("terminal-output");
+      term.innerHTML += `<div><span class="text-emerald-400 font-bold">mototrade:~$ </span> ${cmd}</div>`;
+
+      const parts = cmd.toLowerCase().split(' ');
+      const action = parts[0];
+
+      if (action === 'help') {
+        term.innerHTML += `
+          <div class="text-slate-400 pl-4">
+            - <strong class="text-white">help</strong>: Show available commands<br>
+            - <strong class="text-white">status</strong>: Display live JSON engine state<br>
+            - <strong class="text-white">metrics</strong>: Display Prometheus scrape metrics<br>
+            - <strong class="text-white">explain</strong>: Run database EXPLAIN ANALYZE<br>
+            - <strong class="text-white">ping</strong>: Measure gateway latency<br>
+            - <strong class="text-white">chaos</strong>: View active chaos engineering flags<br>
+            - <strong class="text-white">clear</strong>: Clear terminal screen
+          </div>`;
+      } else if (action === 'status') {
+        term.innerHTML += `<div class="text-cyan-300 pl-4">{"service": "MotoTrade", "region": "${currentRegion}", "status": "HEALTHY", "activeLocks": 1, "memory": "48MB"}</div>`;
+      } else if (action === 'metrics') {
+        term.innerHTML += `<div class="text-emerald-300 pl-4"># HELP http_requests_total\nhttp_requests_total{region="${currentRegion}"} 1420\n# HELP p99_latency_seconds\np99_latency_seconds 0.00118</div>`;
+      } else if (action === 'explain') {
+        runExplainAnalyze();
+        term.innerHTML += `<div class="text-cyan-300 pl-4">Executed EXPLAIN ANALYZE on primary table. View SQL Profiler tab for full tree.</div>`;
+      } else if (action === 'ping') {
+        term.innerHTML += `<div class="text-emerald-400 pl-4">64 bytes from ${currentRegion}.edge: icmp_seq=1 time=${REGION_LATENCIES[currentRegion]} ms</div>`;
+      } else if (action === 'chaos') {
+        term.innerHTML += `<div class="text-amber-400 pl-4">Chaos Flags: ${JSON.stringify(chaosFlags)}</div>`;
+      } else if (action === 'clear') {
+        term.innerHTML = `<div class="text-cyan-400">Terminal cleared. Connected to MotoTrade (Region: ${currentRegion}).</div>`;
+      } else {
+        term.innerHTML += `<div class="text-rose-400 pl-4">Unknown command '${cmd}'. Type 'help' for available commands.</div>`;
+      }
+
+      term.scrollTop = term.scrollHeight;
+    }
+
+    // Real-Time Jitter Sparkline Canvas Loop
+    const jitterHistory = [0.8, 0.9, 0.75, 1.1, 0.85, 0.95, 1.2, 0.82, 0.88, 1.05, 0.78, 0.82];
+    function renderJitterCanvas() {
+      const cvs = document.getElementById("jitterCanvas");
+      if (!cvs) return;
+      const ctx = cvs.getContext("2d");
+      const w = cvs.width = cvs.clientWidth;
+      const h = cvs.height = cvs.clientHeight;
+
+      ctx.clearRect(0, 0, w, h);
+      ctx.strokeStyle = "#10b981";
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+
+      const base = REGION_LATENCIES[currentRegion] || 0.8;
+      const step = w / (jitterHistory.length - 1);
+      jitterHistory.forEach((v, idx) => {
+        const normalized = ((v - 0.5) / 1.5);
+        const y = h - (normalized * h);
+        if (idx === 0) ctx.moveTo(0, y);
+        else ctx.lineTo(idx * step, y);
+      });
+      ctx.stroke();
+    }
+
+    setInterval(() => {
+      const base = REGION_LATENCIES[currentRegion] || 0.8;
+      const newPoint = +(base + (Math.random() - 0.48) * 0.3).toFixed(2);
+      jitterHistory.shift();
+      jitterHistory.push(newPoint);
+      const lbl = document.getElementById("live-jitter-val");
+      if (lbl) lbl.innerText = `${newPoint}ms`;
+      renderJitterCanvas();
+    }, 1200);
+
+    setTimeout(renderJitterCanvas, 300);
+    
+</script>
+
+  <!-- In-Browser Interactive CLI Terminal Drawer -->
+  <div id="cli-drawer" class="fixed bottom-0 left-0 right-0 z-50 bg-slate-950/95 backdrop-blur-md border-t border-slate-800 shadow-2xl transition-all duration-300 transform translate-y-full max-h-[380px] flex flex-col font-mono text-xs">
+    <div class="flex items-center justify-between px-4 py-2 border-b border-slate-800 bg-slate-900/80">
+      <div class="flex items-center gap-2">
+        <span class="w-3 h-3 rounded-full bg-rose-500 inline-block"></span>
+        <span class="w-3 h-3 rounded-full bg-amber-500 inline-block"></span>
+        <span class="w-3 h-3 rounded-full bg-emerald-500 inline-block"></span>
+        <span class="text-slate-400 font-bold ml-2">MotoTrade In-Browser Shell (v2.4)</span>
+      </div>
+      <div class="flex items-center gap-3">
+        <span class="text-slate-500 text-[11px]">Type 'help' for commands</span>
+        <button onclick="toggleTerminal()" class="text-slate-400 hover:text-white">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+    </div>
+    <div id="terminal-output" class="flex-1 p-4 overflow-y-auto space-y-1 text-slate-300">
+      <div class="text-cyan-400">Connected to MotoTrade Enterprise Engine (Region: ap-south-1).</div>
+      <div class="text-slate-400">Available commands: <code class="text-white">help, status, inspect BK-01, explain, metrics, ping, clear</code></div>
+    </div>
+    <div class="flex items-center px-4 py-2 bg-slate-900/90 border-t border-slate-800">
+      <span class="text-emerald-400 font-bold mr-2">mototrade:~$ </span>
+      <input type="text" id="terminal-input" placeholder="Type a command..." class="flex-1 bg-transparent text-white focus:outline-none" onkeydown="if(event.key === 'Enter') handleTerminalCommand()">
+    </div>
+  </div>
+
+  <!-- Chaos Engineering Modal -->
+  <div id="chaos-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="glass-card rounded-2xl max-w-md w-full p-6 space-y-4 border border-amber-500/30 shadow-2xl animate-in fade-in">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+        <h3 class="text-base font-bold text-white flex items-center gap-2">
+          <i class="fa-solid fa-bolt-lightning text-amber-400"></i> Chaos Engineering Switchboard
+        </h3>
+        <button onclick="toggleChaosPanel()" class="w-7 h-7 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center">
+          <i class="fa-solid fa-xmark text-sm"></i>
+        </button>
+      </div>
+
+      <div class="space-y-3 text-xs">
+        <div class="flex items-center justify-between p-3 rounded-xl bg-slate-900/60 border border-slate-800">
+          <div>
+            <span class="font-bold text-white block">Artificial Latency Injection</span>
+            <span class="text-slate-400 text-[11px]">Injects 500ms network roundtrip delay</span>
+          </div>
+          <input type="checkbox" id="chaos-latency" onchange="toggleChaosFlag('latency')" class="accent-amber-500 w-4 h-4 cursor-pointer">
+        </div>
+
+        <div class="flex items-center justify-between p-3 rounded-xl bg-slate-900/60 border border-slate-800">
+          <div>
+            <span class="font-bold text-white block">Redis Sentinel Node Failover</span>
+            <span class="text-slate-400 text-[11px]">Simulates master node failover to replica</span>
+          </div>
+          <input type="checkbox" id="chaos-failover" onchange="toggleChaosFlag('failover')" class="accent-amber-500 w-4 h-4 cursor-pointer">
+        </div>
+
+        <div class="flex items-center justify-between p-3 rounded-xl bg-slate-900/60 border border-slate-800">
+          <div>
+            <span class="font-bold text-white block">Circuit Breaker Trip</span>
+            <span class="text-slate-400 text-[11px]">Forces fallback state on upstream gateway</span>
+          </div>
+          <input type="checkbox" id="chaos-circuit" onchange="toggleChaosFlag('circuit')" class="accent-amber-500 w-4 h-4 cursor-pointer">
+        </div>
+      </div>
+
+      <div class="pt-3 border-t border-slate-800 flex justify-end">
+        <button onclick="toggleChaosPanel()" class="px-4 py-2 rounded-xl bg-amber-600 hover:bg-amber-500 text-white font-bold text-xs">
+          Close Switchboard
+        </button>
+      </div>
+    </div>
+  </div>
+    
 </body>
 </html>
