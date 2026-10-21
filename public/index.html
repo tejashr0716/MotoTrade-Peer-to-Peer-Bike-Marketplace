@@ -1,644 +1,218 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MotoTrade — Peer-to-Peer Used Motorbike Marketplace & Mechanic Inspection</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        brand: '#f97316',
-                        darkbg: '#090d16',
-                        cardbg: '#0f172a',
-                        borderbg: '#1e293b'
-                    }
-                }
-            }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MotoTrade P2P — Used Motorbike Marketplace & Mechanic Inspection</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: '#f97316',
+            darkbg: '#070b14',
+            cardbg: 'rgba(14, 22, 40, 0.75)',
+            borderbg: 'rgba(255, 255, 255, 0.08)'
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace']
+          }
         }
-    </script>
-    <!-- FontAwesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        body {
-            background-color: #090d16;
-            color: #f1f5f9;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-        }
-        .glass-card {
-            background: rgba(15, 23, 42, 0.75);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-        }
-        .glass-card:hover {
-            border-color: rgba(255, 255, 255, 0.18);
-        }
-        .pulse-dot {
-            animation: pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-        }
-        @keyframes pulse-ring {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.4; transform: scale(1.15); }
-        }
-        /* Custom scrollbar */
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: #090d16; }
-        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 9999px; }
-    </style>
+      }
+    }
+  </script>
+  <style>
+    body {
+      background-color: #070b14;
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(249, 115, 22, 0.15) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(15, 23, 42, 0.8) 0px, transparent 50%);
+      color: #f1f5f9;
+      min-height: 100vh;
+    }
+    .glass-card {
+      background: rgba(14, 22, 40, 0.75);
+      backdrop-filter: blur(14px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .pulse-dot {
+      animation: pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+    @keyframes pulse-ring {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.35; transform: scale(1.2); }
+    }
+  </style>
 </head>
-<body class="min-h-screen flex flex-col antialiased selection:bg-brand selection:text-white">
+<body class="antialiased selection:bg-brand selection:text-white flex flex-col min-h-screen">
 
-    <!-- Top Navigation Header (Figma Modern Dashboard Style) -->
-    <header class="sticky top-0 z-50 glass-card border-b border-slate-800/80 px-6 py-3.5 flex items-center justify-between">
-        <div class="flex items-center gap-4">
-            <div class="w-10 h-10 rounded-xl flex items-center justify-center font-bold text-white shadow-lg shadow-brand/30" style="background-color: #f97316">
-                <i class="fa-solid fa-cube text-lg"></i>
-            </div>
-            <div>
-                <div class="flex items-center gap-2">
-                    <h1 class="font-extrabold text-lg text-white tracking-tight">MotoTrade</h1>
-                    <span class="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center gap-1.5">
-                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 pulse-dot"></span> LIVE PROD
-                    </span>
-                    <span class="text-xs text-slate-400 border-l border-slate-700 pl-2 font-mono">Port :3008</span>
-                </div>
-                <p class="text-xs text-slate-400">Peer-to-Peer Used Motorbike Marketplace & Mechanic Inspection</p>
-            </div>
+  <header class="sticky top-0 z-50 glass-card border-b border-slate-800/80 px-6 py-3.5 flex items-center justify-between">
+    <div class="flex items-center gap-4">
+      <a href="https://tejashr0716.github.io/" class="w-10 h-10 rounded-xl bg-orange-500 flex items-center justify-center font-bold text-white shadow-lg shadow-orange-500/30 transition hover:scale-105">
+        <i class="fa-solid fa-motorcycle text-lg"></i>
+      </a>
+      <div>
+        <div class="flex items-center gap-2">
+          <h1 class="font-extrabold text-lg text-white tracking-tight">MotoTrade P2P</h1>
+          <span class="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-orange-500/20 text-orange-400 border border-orange-500/30 flex items-center gap-1.5">
+            <span class="w-1.5 h-1.5 rounded-full bg-orange-400 pulse-dot"></span> 40-POINT VERIFIED
+          </span>
         </div>
-
-        <!-- Center Search / Telemetry status -->
-        <div class="hidden md:flex items-center gap-6">
-            <div class="flex items-center gap-3 bg-slate-950/70 border border-slate-800 rounded-xl px-4 py-1.5 text-xs">
-                <span class="text-slate-400 flex items-center gap-1.5">
-                    <i class="fa-solid fa-server text-emerald-400"></i> Docker: Healthy
-                </span>
-                <span class="text-slate-600">|</span>
-                <span class="text-slate-400 flex items-center gap-1.5">
-                    <i class="fa-solid fa-bolt text-amber-400"></i> Redis: In-Memory Lock Active
-                </span>
-                <span class="text-slate-600">|</span>
-                <span id="latency-tag" class="text-emerald-400 font-mono font-semibold">1.8ms</span>
-            </div>
-        </div>
-
-        <!-- Right Quick Actions -->
-        <div class="flex items-center gap-3">
-            <a href="/metrics" target="_blank" class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition flex items-center gap-1.5">
-                <i class="fa-solid fa-chart-line text-brand"></i> Metrics
-            </a>
-            <a href="/api/v1/health" target="_blank" class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition flex items-center gap-1.5">
-                <i class="fa-solid fa-heart-pulse text-rose-400"></i> /health
-            </a>
-            <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-brand to-cyan-400 flex items-center justify-center text-xs font-bold text-white shadow-md">
-                TH
-            </div>
-        </div>
-    </header>
-
-    <!-- Main Container -->
-    <main class="flex-1 max-w-7xl w-full mx-auto p-6 space-y-6">
-
-        <!-- 4 KPI Metrics Cards -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div class="glass-card rounded-2xl p-5 relative overflow-hidden group">
-                <div class="flex items-center justify-between mb-3">
-                    <span class="text-xs font-medium text-slate-400 uppercase tracking-wider">Verified Listings</span>
-                    <div class="w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center text-brand">
-                        <i class="fa-solid fa-chart-simple"></i>
-                    </div>
-                </div>
-                <div class="text-2xl font-black text-white tracking-tight" id="kpi1-val">342 Bikes</div>
-                <div class="text-xs text-emerald-400 mt-1 font-medium flex items-center gap-1">
-                    <i class="fa-solid fa-arrow-trend-up"></i> Checked by Mechanics
-                </div>
-                <div class="absolute -right-4 -bottom-4 w-20 h-20 rounded-full opacity-10 blur-xl" style="background-color: #f97316"></div>
-            </div>
-
-            <div class="glass-card rounded-2xl p-5 relative overflow-hidden group">
-                <div class="flex items-center justify-between mb-3">
-                    <span class="text-xs font-medium text-slate-400 uppercase tracking-wider">Doorstep Inspections</span>
-                    <div class="w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center text-cyan-400">
-                        <i class="fa-solid fa-users"></i>
-                    </div>
-                </div>
-                <div class="text-2xl font-black text-white tracking-tight" id="kpi2-val">24 Booked Today</div>
-                <div class="text-xs text-cyan-400 mt-1 font-medium flex items-center gap-1">
-                    <i class="fa-solid fa-circle-check"></i> 40-Point Inspection
-                </div>
-                <div class="absolute -right-4 -bottom-4 w-20 h-20 rounded-full bg-cyan-500 opacity-10 blur-xl"></div>
-            </div>
-
-            <div class="glass-card rounded-2xl p-5 relative overflow-hidden group">
-                <div class="flex items-center justify-between mb-3">
-                    <span class="text-xs font-medium text-slate-400 uppercase tracking-wider">Active Buyer Chats</span>
-                    <div class="w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center text-amber-400">
-                        <i class="fa-solid fa-lock"></i>
-                    </div>
-                </div>
-                <div class="text-2xl font-black text-white tracking-tight" id="kpi3-val">118 Real-Time</div>
-                <div class="text-xs text-amber-400 mt-1 font-medium flex items-center gap-1">
-                    <i class="fa-solid fa-shield-halved"></i> Socket.io Connected
-                </div>
-                <div class="absolute -right-4 -bottom-4 w-20 h-20 rounded-full bg-amber-500 opacity-10 blur-xl"></div>
-            </div>
-
-            <div class="glass-card rounded-2xl p-5 relative overflow-hidden group">
-                <div class="flex items-center justify-between mb-3">
-                    <span class="text-xs font-medium text-slate-400 uppercase tracking-wider">Avg Deal Time</span>
-                    <div class="w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center text-emerald-400">
-                        <i class="fa-solid fa-wallet"></i>
-                    </div>
-                </div>
-                <div class="text-2xl font-black text-white tracking-tight" id="kpi4-val">4.2 Days</div>
-                <div class="text-xs text-emerald-400 mt-1 font-medium flex items-center gap-1">
-                    <i class="fa-solid fa-arrow-trend-up"></i> Direct P2P Transfer
-                </div>
-                <div class="absolute -right-4 -bottom-4 w-20 h-20 rounded-full bg-emerald-500 opacity-10 blur-xl"></div>
-            </div>
-        </div>
-
-        <!-- Interactive Main Stage & Live Feed Grid -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-
-            <!-- Left: Interactive Stage (2 Cols) -->
-            <div class="lg:col-span-2 glass-card rounded-2xl p-6 space-y-6">
-                <div class="flex items-center justify-between pb-4 border-b border-slate-800">
-                    <div>
-                        <h2 class="text-lg font-bold text-white flex items-center gap-2">
-                            <i class="fa-solid fa-layer-group text-brand"></i>
-                            Live Operations Console
-                        </h2>
-                        <p class="text-xs text-slate-400">Interactive live data stream with atomic state updates</p>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <button onclick="refreshData()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold flex items-center gap-1.5 transition">
-                            <i class="fa-solid fa-rotate"></i> Sync State
-                        </button>
-                    </div>
-                </div>
-
-                <!-- DYNAMIC CONTENT CONTAINER BASED ON INTERACTIVE TYPE -->
-                <div id="interactive-content">
-                    <!-- Populated by JavaScript -->
-                </div>
-            </div>
-
-            <!-- Right: Real-time Live Event Log & Telemetry (1 Col) -->
-            <div class="glass-card rounded-2xl p-6 flex flex-col h-full space-y-4">
-                <div class="flex items-center justify-between pb-3 border-b border-slate-800">
-                    <h3 class="text-sm font-bold text-white flex items-center gap-2">
-                        <i class="fa-solid fa-terminal text-cyan-400"></i>
-                        Real-Time Event Stream
-                    </h3>
-                    <span class="w-2 h-2 rounded-full bg-emerald-400 pulse-dot"></span>
-                </div>
-
-                <div id="event-stream" class="flex-1 space-y-2 overflow-y-auto max-h-[480px] font-mono text-xs pr-1">
-                    <div class="p-2.5 rounded-xl bg-slate-950/70 border border-slate-800/80 text-slate-300">
-                        <span class="text-slate-500 text-[10px] block">15:10:02.104</span>
-                        <span class="text-emerald-400 font-bold">[ENGINE_BOOT]</span> Service listening on port :3008
-                    </div>
-                    <div class="p-2.5 rounded-xl bg-slate-950/70 border border-slate-800/80 text-slate-300">
-                        <span class="text-slate-500 text-[10px] block">15:10:02.112</span>
-                        <span class="text-cyan-400 font-bold">[REDIS_SYNC]</span> In-memory lock registry initialized
-                    </div>
-                    <div class="p-2.5 rounded-xl bg-slate-950/70 border border-slate-800/80 text-slate-300">
-                        <span class="text-slate-500 text-[10px] block">15:10:02.118</span>
-                        <span class="text-amber-400 font-bold">[DB_INDEX]</span> Telemetry index verification complete
-                    </div>
-                </div>
-
-                <!-- System Telemetry Status Bar -->
-                <div class="pt-4 border-t border-slate-800 space-y-2">
-                    <div class="flex items-center justify-between text-xs text-slate-400">
-                        <span>Database Query Time</span>
-                        <span class="font-mono text-emerald-400 font-semibold" id="db-latency">1.2ms</span>
-                    </div>
-                    <div class="w-full bg-slate-800 rounded-full h-1.5 overflow-hidden">
-                        <div class="bg-emerald-500 h-1.5 rounded-full" style="width: 15%"></div>
-                    </div>
-                    <div class="flex items-center justify-between text-xs text-slate-400">
-                        <span>Lock Resolution Speed</span>
-                        <span class="font-mono text-brand font-semibold">&lt; 0.5ms</span>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-
-    </main>
-
-    <!-- Interactive Modal -->
-    <div id="action-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="glass-card rounded-2xl max-w-md w-full p-6 space-y-4 border border-slate-700 shadow-2xl animate-in fade-in zoom-in-95">
-            <div class="flex items-center justify-between pb-3 border-b border-slate-800">
-                <h3 class="text-base font-bold text-white flex items-center gap-2" id="modal-title">
-                    <i class="fa-solid fa-lock text-brand"></i> Execute Action
-                </h3>
-                <button onclick="closeModal()" class="w-7 h-7 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center">
-                    <i class="fa-solid fa-xmark text-sm"></i>
-                </button>
-            </div>
-            <div class="space-y-3 text-xs" id="modal-body">
-                <!-- Injected via JS -->
-            </div>
-            <div class="pt-3 border-t border-slate-800 flex items-center justify-end gap-2">
-                <button onclick="closeModal()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold">
-                    Cancel
-                </button>
-                <button id="modal-confirm-btn" class="px-4 py-2 rounded-xl text-white text-xs font-bold shadow-lg" style="background-color: #f97316">
-                    Confirm & Reserve
-                </button>
-            </div>
-        </div>
+        <p class="text-xs text-slate-400">Peer-to-Peer Used Motorbike Marketplace · Certified Mechanic Inspections · Live Chat</p>
+      </div>
     </div>
 
-    <!-- Frontend Dynamic Engine Scripts -->
-    <script>
-        const ITYPE = "bike_market";
-        const INITIAL_ITEMS = [{"id": "BK-01", "name": "Royal Enfield Continental GT 650", "year": 2023, "km": "8,400 km", "price": 3800, "location": "Bangalore", "status": "Available", "specs": "Custom Exhaust \u00b7 Pirelli Tires \u00b7 Single Owner", "img": "https://images.unsplash.com/photo-1558981806-ec527fa84c39?w=600&q=80"}, {"id": "BK-02", "name": "KTM Duke 390 ABS", "year": 2022, "km": "12,100 km", "price": 2900, "location": "Mumbai", "status": "Available", "specs": "Quickshifter+ \u00b7 TFT Display \u00b7 Showroom Condition", "img": "https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?w=600&q=80"}, {"id": "BK-03", "name": "Yamaha YZF R15 V4", "year": 2024, "km": "4,200 km", "price": 2100, "location": "Chennai", "status": "Inspection Scheduled", "specs": "Metallic Red \u00b7 Traction Control \u00b7 First Service Done", "img": "https://images.unsplash.com/photo-1609630875171-b1321377ee65?w=600&q=80"}, {"id": "BK-04", "name": "Kawasaki Ninja 400", "year": 2021, "km": "15,800 km", "price": 4600, "location": "Delhi NCR", "status": "Available", "specs": "Akrapovi\u010d Slip-on \u00b7 Zero Accident Record", "img": "https://images.unsplash.com/photo-1591637333184-19aa84b3e01f?w=600&q=80"}];
-        let items = [...INITIAL_ITEMS];
+    <div class="flex items-center gap-3">
+      <a href="https://github.com/tejashr0716/MotoTrade-Peer-to-Peer-Bike-Marketplace" target="_blank" class="px-3.5 py-1.5 text-xs font-bold rounded-xl bg-slate-800 hover:bg-slate-700 text-white border border-slate-700 transition flex items-center gap-1.5">
+        <i class="fa-brands fa-github text-sm"></i> Source Code
+      </a>
+      <a href="https://tejashr0716.github.io/" class="px-3.5 py-1.5 text-xs font-bold rounded-xl text-slate-300 hover:text-white bg-slate-900 border border-slate-800 transition">
+        ← Portfolio
+      </a>
+    </div>
+  </header>
 
-        function logEvent(tag, message, color="text-brand") {
-            const stream = document.getElementById("event-stream");
-            const now = new Date().toISOString().substring(11, 23);
-            const entry = document.createElement("div");
-            entry.className = "p-2.5 rounded-xl bg-slate-950/70 border border-slate-800/80 text-slate-300 animate-in fade-in";
-            entry.innerHTML = `<span class="text-slate-500 text-[10px] block">${now}</span>
-                               <span class="${color} font-bold">[${tag}]</span> ${message}`;
-            stream.prepend(entry);
-        }
+  <main class="flex-1 max-w-7xl w-full mx-auto p-6 space-y-6">
 
-        function renderContent() {
-            const container = document.getElementById("interactive-content");
-            
-            if (ITYPE === "car_rental") {
-                container.innerHTML = `
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        ${items.map(car => `
-                            <div class="rounded-xl border border-slate-800/80 bg-slate-950/40 p-4 space-y-3 hover:border-slate-700 transition">
-                                <div class="h-32 rounded-lg overflow-hidden relative">
-                                    <img src="${car.img}" alt="${car.name}" class="w-full h-full object-cover">
-                                    <span class="absolute top-2 right-2 px-2 py-0.5 rounded-full text-[10px] font-bold ${car.status === 'Available' ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40' : 'bg-amber-500/20 text-amber-400 border border-amber-500/40'}">
-                                        ${car.status}
-                                    </span>
-                                </div>
-                                <div class="flex items-start justify-between">
-                                    <div>
-                                        <h4 class="font-bold text-sm text-white">${car.name}</h4>
-                                        <p class="text-xs text-slate-400">${car.type} · ${car.specs}</p>
-                                    </div>
-                                    <div class="text-right">
-                                        <span class="text-base font-black text-white">$${car.price}</span>
-                                        <span class="text-[10px] text-slate-400 block">/hour</span>
-                                    </div>
-                                </div>
-                                <button onclick="openBookingModal('${car.id}', '${car.name}', ${car.price})" 
-                                        class="w-full py-2 rounded-xl text-xs font-bold text-white transition flex items-center justify-center gap-1.5"
-                                        style="background-color: #f97316"
-                                        ${car.status !== 'Available' ? 'disabled class="w-full py-2 rounded-xl text-xs font-bold text-slate-500 bg-slate-800 cursor-not-allowed"' : ''}>
-                                    <i class="fa-solid fa-key"></i> ${car.status === 'Available' ? 'Reserve & Lock (10 Min)' : 'Currently Locked'}
-                                </button>
-                            </div>
-                        `).join('')}
-                    </div>
-                `;
-            } else if (ITYPE === "flash_sale") {
-                container.innerHTML = `
-                    <div class="space-y-4">
-                        ${items.map(item => `
-                            <div class="rounded-xl border border-slate-800/80 bg-slate-950/40 p-4 flex flex-col md:flex-row items-center justify-between gap-4">
-                                <div class="w-20 h-20 rounded-lg overflow-hidden shrink-0">
-                                    <img src="${item.img}" class="w-full h-full object-cover">
-                                </div>
-                                <div class="flex-1 space-y-1 text-left">
-                                    <div class="flex items-center gap-2">
-                                        <h4 class="font-bold text-sm text-white">${item.name}</h4>
-                                        <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-500/20 text-rose-400 border border-rose-500/30">FLASH SALE</span>
-                                    </div>
-                                    <p class="text-xs text-slate-400">${item.specs}</p>
-                                    <div class="flex items-center gap-3 pt-1">
-                                        <span class="text-lg font-black text-white">$${item.price}</span>
-                                        <span class="text-xs font-mono text-amber-400 font-semibold"><span id="stock-${item.id}">${item.stock}</span> units remaining</span>
-                                    </div>
-                                </div>
-                                <div class="shrink-0">
-                                    <button onclick="flashBuy('${item.id}', '${item.name}')" class="px-5 py-2.5 rounded-xl font-bold text-xs text-white shadow-lg shadow-rose-500/20 bg-rose-500 hover:bg-rose-600 transition flex items-center gap-2">
-                                        <i class="fa-solid fa-bolt"></i> Instant Buy & Lock
-                                    </button>
-                                </div>
-                            </div>
-                        `).join('')}
-                    </div>
-                `;
-            } else if (ITYPE === "hospital_bed") {
-                container.innerHTML = `
-                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
-                        ${items.map(bed => `
-                            <div class="rounded-xl border border-slate-800 p-4 space-y-3 bg-slate-950/40">
-                                <div class="flex items-center justify-between">
-                                    <span class="font-mono font-bold text-sm text-white">${bed.id}</span>
-                                    <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${bed.status === 'Available' ? 'bg-emerald-500/20 text-emerald-400' : (bed.status === 'Emergency Hold' ? 'bg-amber-500/20 text-amber-400' : 'bg-rose-500/20 text-rose-400')}">
-                                        ${bed.status}
-                                    </span>
-                                </div>
-                                <div>
-                                    <p class="text-xs font-medium text-slate-300">${bed.ward}</p>
-                                    <p class="text-[11px] text-slate-500">${bed.type} · ${bed.doctor}</p>
-                                </div>
-                                <button onclick="holdBed('${bed.id}')" class="w-full py-1.5 rounded-lg text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 transition">
-                                    ${bed.status === 'Available' ? 'Place Emergency Hold' : 'Occupied / Held'}
-                                </button>
-                            </div>
-                        `).join('')}
-                    </div>
-                `;
-            } else if (ITYPE === "doctor_queue") {
-                container.innerHTML = `
-                    <div class="space-y-4">
-                        ${items.map(doc => `
-                            <div class="rounded-xl border border-slate-800 p-4 bg-slate-950/40 flex flex-col md:flex-row items-center justify-between gap-4">
-                                <div class="flex items-center gap-3">
-                                    <div class="w-12 h-12 rounded-xl bg-teal-500/20 border border-teal-500/30 flex items-center justify-center text-teal-400 font-bold text-lg">
-                                        <i class="fa-solid fa-user-doctor"></i>
-                                    </div>
-                                    <div>
-                                        <h4 class="font-bold text-sm text-white">${doc.name}</h4>
-                                        <p class="text-xs text-slate-400">${doc.specialty} · <span class="text-teal-400">${doc.status}</span></p>
-                                    </div>
-                                </div>
-                                <div class="flex items-center gap-6">
-                                    <div class="text-center">
-                                        <span class="text-[10px] uppercase tracking-wider text-slate-500 block">Serving Token</span>
-                                        <span class="text-xl font-black text-white font-mono">#${doc.current_token}</span>
-                                    </div>
-                                    <div class="text-center">
-                                        <span class="text-[10px] uppercase tracking-wider text-slate-500 block">Est Wait</span>
-                                        <span class="text-xs font-bold text-amber-400">${doc.wait_time}</span>
-                                    </div>
-                                    <button onclick="bookToken('${doc.id}', '${doc.name}')" class="px-4 py-2 rounded-xl bg-teal-500 hover:bg-teal-600 text-white font-bold text-xs shadow-lg transition">
-                                        + Issue Token #${doc.next_token}
-                                    </button>
-                                </div>
-                            </div>
-                        `).join('')}
-                    </div>
-                `;
-            } else if (ITYPE === "stock_screener") {
-                container.innerHTML = `
-                    <div class="space-y-3">
-                        <div class="p-3 bg-slate-950/60 rounded-xl border border-slate-800 flex items-center justify-between text-xs font-semibold text-slate-400">
-                            <span>TICKER / ASSET</span>
-                            <span>LAST PRICE</span>
-                            <span>24H CHANGE</span>
-                            <span>VOLUME</span>
-                            <span>ACTION</span>
-                        </div>
-                        ${items.map(stk => `
-                            <div class="p-3 bg-slate-950/40 rounded-xl border border-slate-800/80 flex items-center justify-between text-xs hover:border-slate-700 transition">
-                                <div class="flex items-center gap-2">
-                                    <span class="font-black text-white font-mono">${stk.ticker}</span>
-                                    <span class="text-[11px] text-slate-500 hidden sm:inline">${stk.name}</span>
-                                </div>
-                                <span class="font-mono font-bold text-white">$${stk.price.toFixed(2)}</span>
-                                <span class="font-mono font-bold ${stk.trend === 'up' ? 'text-emerald-400' : 'text-rose-400'}">${stk.change}</span>
-                                <span class="font-mono text-slate-400 hidden sm:inline">${stk.volume}</span>
-                                <button onclick="tradeOrder('${stk.ticker}', ${stk.price})" class="px-3 py-1 rounded-lg bg-sky-500 hover:bg-sky-600 text-white font-bold text-[11px]">
-                                    Trade
-                                </button>
-                            </div>
-                        `).join('')}
-                    </div>
-                `;
-            } else if (ITYPE === "crypto_alerts") {
-                container.innerHTML = `
-                    <div class="space-y-4">
-                        ${items.map(cry => `
-                            <div class="p-4 bg-slate-950/40 rounded-xl border border-slate-800 flex flex-col md:flex-row items-center justify-between gap-4">
-                                <div>
-                                    <span class="font-black text-white text-base font-mono">${cry.symbol}</span>
-                                    <p class="text-xs text-slate-400">${cry.name} · 24h Vol Depth: <span class="text-amber-400">${cry.depth_bid}</span></p>
-                                </div>
-                                <div class="text-right">
-                                    <span class="text-xl font-black text-white font-mono">$${cry.price.toLocaleString()}</span>
-                                    <span class="text-xs text-emerald-400 font-bold block">${cry.change}</span>
-                                </div>
-                                <button onclick="setAlertModal('${cry.symbol}', ${cry.price})" class="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs shadow-lg transition">
-                                    <i class="fa-solid fa-bell"></i> Set Price Alert
-                                </button>
-                            </div>
-                        `).join('')}
-                    </div>
-                `;
-            } else if (ITYPE === "seat_booking") {
-                let seatGrid = "";
-                for (let row = 1; row <= 5; row++) {
-                    seatGrid += `<div class="flex items-center justify-center gap-2">`;
-                    for (let col = 1; col <= 8; col++) {
-                        const seatId = String.fromCharCode(64 + row) + col;
-                        const isBooked = (row === 2 && col === 3) || (row === 3 && col === 4) || (row === 4 && col === 5);
-                        seatGrid += `
-                            <button id="seat-${seatId}" onclick="toggleSeat('${seatId}')" 
-                                    class="w-8 h-8 rounded-lg font-mono text-[10px] font-bold flex items-center justify-center transition
-                                    ${isBooked ? 'bg-slate-800 text-slate-600 cursor-not-allowed' : 'bg-purple-950/40 border border-purple-800/60 text-purple-300 hover:bg-purple-600 hover:text-white'}">
-                                ${seatId}
-                            </button>
-                        `;
-                    }
-                    seatGrid += `</div>`;
-                }
-                container.innerHTML = `
-                    <div class="space-y-5">
-                        <div class="w-full py-1.5 bg-gradient-to-r from-transparent via-purple-500/30 to-transparent text-center text-[10px] font-bold uppercase tracking-widest text-purple-300 rounded">
-                            CINEMA SCREEN (IMAX 3D)
-                        </div>
-                        <div class="space-y-2 py-2">
-                            ${seatGrid}
-                        </div>
-                        <div class="flex items-center justify-between pt-4 border-t border-slate-800 text-xs">
-                            <span class="text-slate-400">Selected: <strong class="text-white" id="selected-seats-lbl">None</strong></span>
-                            <button onclick="confirmSeatLock()" class="px-5 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs shadow-lg shadow-purple-600/30">
-                                Lock Seats (10 Min)
-                            </button>
-                        </div>
-                    </div>
-                `;
-            } else if (ITYPE === "bike_market") {
-                container.innerHTML = `
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        ${items.map(bk => `
-                            <div class="rounded-xl border border-slate-800 bg-slate-950/40 p-4 space-y-3">
-                                <div class="h-32 rounded-lg overflow-hidden">
-                                    <img src="${bk.img}" class="w-full h-full object-cover">
-                                </div>
-                                <div class="flex items-start justify-between">
-                                    <div>
-                                        <h4 class="font-bold text-sm text-white">${bk.name}</h4>
-                                        <p class="text-xs text-slate-400">${bk.year} · ${bk.km} · ${bk.location}</p>
-                                    </div>
-                                    <span class="text-base font-black text-white">$${bk.price}</span>
-                                </div>
-                                <div class="flex gap-2">
-                                    <button onclick="bookInspection('${bk.id}', '${bk.name}')" class="flex-1 py-1.5 rounded-lg bg-orange-500 hover:bg-orange-600 text-white text-xs font-bold">
-                                        Book Inspection
-                                    </button>
-                                    <button onclick="openChat('${bk.name}')" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold">
-                                        <i class="fa-solid fa-comment"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        `).join('')}
-                    </div>
-                `;
-            } else if (ITYPE === "villa_booking") {
-                container.innerHTML = `
-                    <div class="space-y-4">
-                        ${items.map(vil => `
-                            <div class="rounded-xl border border-slate-800 bg-slate-950/40 p-4 flex flex-col md:flex-row items-center justify-between gap-4">
-                                <div class="w-32 h-24 rounded-lg overflow-hidden shrink-0">
-                                    <img src="${vil.img}" class="w-full h-full object-cover">
-                                </div>
-                                <div class="flex-1 space-y-1">
-                                    <h4 class="font-bold text-sm text-white">${vil.name}</h4>
-                                    <p class="text-xs text-slate-400">${vil.location} · ${vil.beds}</p>
-                                    <span class="text-base font-black text-white">$${vil.price} <span class="text-xs text-slate-400 font-normal">/night</span></span>
-                                </div>
-                                <button onclick="reserveVilla('${vil.id}', '${vil.name}', ${vil.price})" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow-lg">
-                                    Check & Book
-                                </button>
-                            </div>
-                        `).join('')}
-                    </div>
-                `;
-            } else if (ITYPE === "parking_map") {
-                let bayGrid = "";
-                for (let i = 1; i <= 20; i++) {
-                    const isOccupied = i % 3 === 0;
-                    bayGrid += `
-                        <button onclick="reserveBay('BAY-${i}')" 
-                                class="p-3 rounded-xl border text-center font-mono font-bold text-xs transition
-                                ${isOccupied ? 'bg-slate-900 border-slate-800 text-slate-600 cursor-not-allowed' : 'bg-blue-950/40 border-blue-800/60 text-blue-300 hover:bg-blue-600 hover:text-white'}">
-                            BAY-${i}
-                            <span class="block text-[9px] ${isOccupied ? 'text-rose-500' : 'text-emerald-400'}">${isOccupied ? 'BUSY' : 'OPEN'}</span>
-                        </button>
-                    `;
-                }
-                container.innerHTML = `
-                    <div class="space-y-4">
-                        <div class="grid grid-cols-4 sm:grid-cols-5 gap-3">
-                            ${bayGrid}
-                        </div>
-                    </div>
-                `;
-            }
-        }
+    <!-- KPI Metrics -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div class="glass-card rounded-2xl p-5 relative overflow-hidden">
+        <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Verified Bikes</span>
+        <div class="text-2xl font-black text-white font-mono mt-2">342 Bikes</div>
+        <div class="text-xs text-orange-400 font-semibold mt-1">Inspected by Mechanics</div>
+      </div>
 
-        // Modal Handlers
-        let selectedSeats = [];
-        function toggleSeat(id) {
-            const el = document.getElementById("seat-" + id);
-            if (selectedSeats.includes(id)) {
-                selectedSeats = selectedSeats.filter(s => s !== id);
-                el.classList.remove("bg-purple-600", "text-white");
-                el.classList.add("bg-purple-950/40", "text-purple-300");
-            } else {
-                selectedSeats.push(id);
-                el.classList.add("bg-purple-600", "text-white");
-                el.classList.remove("bg-purple-950/40", "text-purple-300");
-            }
-            document.getElementById("selected-seats-lbl").innerText = selectedSeats.length ? selectedSeats.join(", ") : "None";
-        }
+      <div class="glass-card rounded-2xl p-5 relative overflow-hidden">
+        <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Doorstep Inspections</span>
+        <div class="text-2xl font-black text-white font-mono mt-2">24 Booked Today</div>
+        <div class="text-xs text-emerald-400 font-semibold mt-1">40-Point Diagnostic Checklist</div>
+      </div>
 
-        function confirmSeatLock() {
-            if (!selectedSeats.length) return alert("Select at least one seat first!");
-            logEvent("SEAT_LOCK", `Atomic Redis Lock held on seats [${selectedSeats.join(', ')}] for 10 minutes.`, "text-purple-400");
-            alert(`Seats ${selectedSeats.join(', ')} locked for checkout! Total: $${selectedSeats.length * 15}`);
-            selectedSeats = [];
-            document.getElementById("selected-seats-lbl").innerText = "None";
-        }
+      <div class="glass-card rounded-2xl p-5 relative overflow-hidden">
+        <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Active Buyer Chats</span>
+        <div class="text-2xl font-black text-white font-mono mt-2">118 In Negotiation</div>
+        <div class="text-xs text-cyan-400 font-semibold mt-1">Socket.io Encrypted</div>
+      </div>
 
-        function openBookingModal(id, name, price) {
-            document.getElementById("modal-title").innerHTML = `<i class="fa-solid fa-car text-brand"></i> Reserve ${name}`;
-            document.getElementById("modal-body").innerHTML = `
-                <div class="space-y-2">
-                    <p class="text-slate-300">Locking vehicle <strong>${name}</strong> at <strong>$${price}/hr</strong>.</p>
-                    <div class="p-3 rounded-xl bg-slate-950/60 border border-slate-800 space-y-1">
-                        <span class="text-slate-400">Security Deposit: <strong class="text-white">$200.00</strong> (Refundable)</span>
-                        <span class="text-slate-400 block">Inventory Lock: <strong class="text-emerald-400">10 Minutes Guaranteed</strong></span>
-                    </div>
-                </div>
-            `;
-            document.getElementById("action-modal").classList.remove("hidden");
-            document.getElementById("modal-confirm-btn").onclick = () => {
-                logEvent("BOOKING_LOCK", `Car ${id} (${name}) locked in Redis. Lease initiated.`, "text-brand");
-                closeModal();
-            };
-        }
+      <div class="glass-card rounded-2xl p-5 relative overflow-hidden">
+        <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Avg Deal Velocity</span>
+        <div class="text-2xl font-black text-white font-mono mt-2">4.2 Days</div>
+        <div class="text-xs text-amber-400 font-semibold mt-1">Direct Escrow Settlement</div>
+      </div>
+    </div>
 
-        function flashBuy(id, name) {
-            logEvent("ATOMIC_DECR", `Flash order placed for ${name}. Redis lock counter decremented.`, "text-rose-400");
-            const el = document.getElementById("stock-" + id);
-            if (el) {
-                let v = parseInt(el.innerText);
-                if (v > 0) el.innerText = v - 1;
-            }
-            alert(`Atomic Flash Purchase successful for ${name}! Order dispatched.`);
-        }
+    <!-- Main Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
-        function holdBed(id) {
-            logEvent("EMERGENCY_HOLD", `Bed ${id} placed on 15-minute emergency ambulance hold.`, "text-emerald-400");
-            alert(`Emergency hold confirmed for ${id}.`);
-        }
+      <!-- Left: Marketplace Listings (2 Cols) -->
+      <div class="lg:col-span-2 glass-card rounded-2xl p-6 space-y-5">
+        <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+          <h2 class="text-base font-bold text-white flex items-center gap-2">
+            <i class="fa-solid fa-motorcycle text-orange-400"></i> Featured Motorbike Inventory
+          </h2>
+          <span class="text-xs text-slate-400 font-mono">Bangalore / Mumbai / Delhi NCR</span>
+        </div>
 
-        function bookToken(id, doc) {
-            logEvent("OPD_TOKEN", `Patient token issued for ${doc}. Wait time approx 8 mins.`, "text-teal-400");
-            alert(`Token generated for ${doc}!`);
-        }
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="bikes-list">
+          <!-- Injected via JS -->
+        </div>
+      </div>
 
-        function tradeOrder(ticker, price) {
-            logEvent("EXEC_ORDER", `Simulated market buy executed for ${ticker} at $${price}.`, "text-sky-400");
-            alert(`Order filled: 10 shares of ${ticker} at $${price}`);
-        }
+      <!-- Right: Real-Time Chat & Inspection Box (1 Col) -->
+      <div class="glass-card rounded-2xl p-6 flex flex-col space-y-4">
+        <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+          <h3 class="text-sm font-bold text-white flex items-center gap-2">
+            <i class="fa-solid fa-comments text-cyan-400"></i> Buyer-Seller Direct Chat
+          </h3>
+          <span class="w-2 h-2 rounded-full bg-emerald-400 pulse-dot"></span>
+        </div>
 
-        function setAlertModal(symbol, price) {
-            logEvent("ALERT_RULE", `Trigger set for ${symbol} when price crosses $${price}.`, "text-amber-400");
-            alert(`Alert created for ${symbol}!`);
-        }
+        <div id="chat-box" class="flex-1 space-y-2 overflow-y-auto max-h-[360px] text-xs pr-1">
+          <div class="p-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-300">
+            <span class="text-slate-500 font-bold block text-[10px]">Seller (Continental GT 650):</span>
+            Hi! Bike is single owner, never dropped. Let me know if you want to book inspection!
+          </div>
+        </div>
 
-        function bookInspection(id, name) {
-            logEvent("INSPECT_REQ", `Doorstep mechanic inspection scheduled for ${name}.`, "text-orange-400");
-            alert(`Inspection booked for ${name}.`);
-        }
+        <div class="flex gap-2 pt-2 border-t border-slate-800">
+          <input type="text" id="chat-input" placeholder="Make an offer (e.g. $3,500)..." class="flex-1 bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white">
+          <button onclick="sendChatMessage()" class="px-4 py-2 rounded-xl bg-orange-500 hover:bg-orange-400 text-white font-bold text-xs">
+            Send
+          </button>
+        </div>
+      </div>
 
-        function openChat(name) {
-            alert(`Starting real-time encrypted chat with seller of ${name}...`);
-        }
+    </div>
 
-        function reserveVilla(id, name, price) {
-            logEvent("VILLA_LOCK", `Dates locked for ${name} at $${price}/night.`, "text-emerald-400");
-            alert(`Reservation hold active for ${name}!`);
-        }
+  </main>
 
-        function reserveBay(bay) {
-            logEvent("BAY_HOLD", `Parking ${bay} reserved. QR access pass generated.`, "text-blue-400");
-            alert(`Reservation confirmed for ${bay}! QR pass sent to terminal.`);
-        }
+  <script>
+    const BIKES = [
+      { id: "BK-01", name: "Royal Enfield Continental GT 650", year: 2023, km: "8,400 km", price: 3800, loc: "Bangalore", specs: "Custom Exhaust · Pirelli Tires · Single Owner", img: "https://images.unsplash.com/photo-1558981806-ec527fa84c39?w=600&q=80" },
+      { id: "BK-02", name: "KTM Duke 390 ABS", year: 2022, km: "12,100 km", price: 2900, loc: "Mumbai", specs: "Quickshifter+ · TFT Display · First Owner", img: "https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?w=600&q=80" },
+      { id: "BK-03", name: "Yamaha YZF R15 V4", year: 2024, km: "4,200 km", price: 2100, loc: "Chennai", specs: "Metallic Red · Traction Control · Warranty Active", img: "https://images.unsplash.com/photo-1609630875171-b1321377ee65?w=600&q=80" },
+      { id: "BK-04", name: "Kawasaki Ninja 400", year: 2021, km: "15,800 km", price: 4600, loc: "Delhi NCR", specs: "Akrapovič Slip-on · Zero Accident Record", img: "https://images.unsplash.com/photo-1591637333184-19aa84b3e01f?w=600&q=80" }
+    ];
 
-        function closeModal() {
-            document.getElementById("action-modal").classList.add("hidden");
-        }
+    function renderBikes() {
+      const c = document.getElementById("bikes-list");
+      c.innerHTML = BIKES.map(b => `
+        <div class="rounded-xl border border-slate-800 bg-slate-950/40 p-4 space-y-3 hover:border-slate-700 transition">
+          <div class="h-32 rounded-lg overflow-hidden">
+            <img src="${b.img}" class="w-full h-full object-cover">
+          </div>
+          <div class="flex items-start justify-between">
+            <div>
+              <h4 class="font-bold text-sm text-white">${b.name}</h4>
+              <p class="text-xs text-slate-400">${b.year} · ${b.km} · ${b.loc}</p>
+            </div>
+            <span class="text-base font-black text-white">$${b.price}</span>
+          </div>
+          <div class="flex gap-2">
+            <button onclick="bookInspection('${b.name}')" class="flex-1 py-1.5 rounded-lg bg-orange-500 hover:bg-orange-400 text-white font-bold text-xs transition">
+              Book Mechanic Inspection
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
 
-        function refreshData() {
-            logEvent("TELEMETRY", "Synced with local engine state. Cache hit ratio 99.8%.", "text-slate-400");
-        }
+    function bookInspection(name) {
+      alert(`40-Point Doorstep Mechanic Inspection scheduled for ${name}!
+Mechanic will verify compression, OBD errors, and chassis alignment.`);
+    }
 
-        // Initialize on page load
-        renderContent();
-    </script>
+    function sendChatMessage() {
+      const inp = document.getElementById("chat-input");
+      const msg = inp.value.trim();
+      if (!msg) return;
+      const box = document.getElementById("chat-box");
+      box.innerHTML += `
+        <div class="p-2.5 rounded-xl bg-orange-950/40 border border-orange-800/40 text-orange-200 text-right">
+          <span class="text-orange-400 font-bold block text-[10px]">You:</span>
+          ${msg}
+        </div>
+      `;
+      inp.value = "";
+      setTimeout(() => {
+        box.innerHTML += `
+          <div class="p-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-300">
+            <span class="text-slate-500 font-bold block text-[10px]">Seller:</span>
+            Thanks for your offer! If you can do $100 more and close by this weekend, it is yours!
+          </div>
+        `;
+        box.scrollTop = box.scrollHeight;
+      }, 1000);
+    }
+
+    renderBikes();
+  </script>
 </body>
 </html>
