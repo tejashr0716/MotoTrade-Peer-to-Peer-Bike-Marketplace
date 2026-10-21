@@ -1,0 +1,29 @@
+groups:
+  - name: mototrade_engine_alerts
+    rules:
+      - alert: HighLockContention
+        expr: rate(mototrade_lock_conflicts_total[1m]) > 25
+        for: 30s
+        labels:
+          severity: critical
+        annotations:
+          summary: "High distributed lock contention on MotoTrade"
+          description: "Mutex conflicts exceeded 25/sec on resource BK-01."
+
+      - alert: P99LatencyDegradation
+        expr: histogram_quantile(0.99, sum(rate(mototrade_request_duration_seconds_bucket[5m])) by (le)) > 0.05
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: "P99 latency exceeding 50ms threshold"
+          description: "Investigate Redis Sentinel failover or PostgreSQL WAL replication lag."
+
+      - alert: CircuitBreakerOpen
+        expr: mototrade_circuit_breaker_state == 2
+        for: 15s
+        labels:
+          severity: critical
+        annotations:
+          summary: "MotoTrade Circuit Breaker is OPEN"
+          description: "Gateway fallback is active due to multiple downstream service rejections."
