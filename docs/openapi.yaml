@@ -1,0 +1,86 @@
+openapi: 3.0.3
+info:
+  title: MotoTrade Enterprise Engine API
+  version: 2.5.0
+  description: High-performance low-latency API specification for MotoTrade distributed engine.
+servers:
+  - url: https://api.mototrade.io/v1
+    description: Production Edge Gateway (ap-south-1)
+  - url: http://localhost:3008/v1
+    description: Local Container Runtime
+paths:
+  /lock:
+    post:
+      summary: Acquire Distributed Mutex Lease
+      description: Atomically requests a single-holder distributed lease with TTL guard.
+      parameters:
+        - in: header
+          name: X-Request-ID
+          schema:
+            type: string
+          required: false
+          description: Distributed tracing correlation ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - resourceId
+                - durationSeconds
+              properties:
+                resourceId:
+                  type: string
+                  example: "BK-01"
+                durationSeconds:
+                  type: integer
+                  example: 600
+      responses:
+        '200':
+          description: Lease acquired successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  leaseId:
+                    type: string
+                    example: "lease-1729505000-842"
+                  expiresAt:
+                    type: string
+                    format: date-time
+        '409':
+          description: Conflict - Mutex already held by another session
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: "RESOURCE_ALREADY_LOCKED"
+  /healthz:
+    get:
+      summary: Liveness Probe
+      responses:
+        '200':
+          description: Service healthy
+  /readyz:
+    get:
+      summary: Readiness Probe
+      responses:
+        '200':
+          description: Database and Redis pools active
+  /metrics:
+    get:
+      summary: Prometheus Metrics Scrape Endpoint
+      responses:
+        '200':
+          description: OpenMetrics format telemetry
