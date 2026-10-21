@@ -94,9 +94,13 @@
       border-color: rgba(99, 102, 241, 0.5);
     }
     .crt-scanlines {
-      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 255, 0, 0.03));
       background-size: 100% 3px, 6px 100%;
       pointer-events: none;
+    }
+    th.sortable:hover {
+      background: rgba(255, 255, 255, 0.04);
+      cursor: pointer;
     }
   </style>
     
@@ -140,9 +144,9 @@
     </div>
 
     
-    <!-- Global Command Palette & Theme Tools -->
+    <!-- Global Command Palette & Platform Control Plane (v4.0) -->
     <div class="hidden xl:flex items-center gap-2">
-      <button onclick="openCommandPalette()" class="px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white hover:border-slate-700 text-xs font-mono flex items-center gap-2 transition" title="Press Cmd+K / Ctrl+K">
+      <button onclick="openCommandPalette()" class="px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white hover:border-slate-700 text-xs font-mono flex items-center gap-2 transition" title="Spotlight Command Menu (⌘K / Ctrl+K)">
         <i class="fa-solid fa-magnifying-glass text-[11px] text-cyan-400"></i>
         <span>Command Menu</span>
         <kbd class="px-1.5 py-0.5 rounded bg-slate-800 text-[10px] text-slate-300 font-bold border border-slate-700">⌘K</kbd>
@@ -165,14 +169,35 @@
         <option value="matrix">💻 Matrix Phosphor</option>
       </select>
 
-      <button onclick="toggleDevTools()" class="px-2.5 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-cyan-400 hover:border-slate-700 text-xs font-mono font-bold flex items-center gap-1.5 transition" title="Redux DevTools & Time-Travel">
+      <!-- Voice Speech Synthesis Announcer Toggle -->
+      <button onclick="toggleVoiceAnnouncements()" id="btn-voice-toggle" class="px-2.5 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-emerald-400 hover:border-slate-700 text-xs font-mono font-bold flex items-center gap-1.5 transition" title="Toggle Native Web Speech Voice Audio (V)">
+        <i class="fa-solid fa-volume-high text-emerald-400" id="voice-icon"></i>
+        <span id="voice-label">Voice: ON</span>
+      </button>
+
+      <!-- Network Traffic Sniffer Drawer Toggle -->
+      <button onclick="toggleNetworkSniffer()" class="px-2.5 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-cyan-400 hover:border-slate-700 text-xs font-mono font-bold flex items-center gap-1.5 transition" title="DevTools Live Network Sniffer (N)">
+        <i class="fa-solid fa-network-wired text-cyan-400"></i> Sniffer
+      </button>
+
+      <!-- DevTools & Time-Travel Drawer Toggle -->
+      <button onclick="toggleDevTools()" class="px-2.5 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-cyan-400 hover:border-slate-700 text-xs font-mono font-bold flex items-center gap-1.5 transition" title="Redux DevTools & Time-Travel (D)">
         <i class="fa-solid fa-clock-rotate-left"></i> DevTools
       </button>
-      <button onclick="toggleTerminal()" class="px-2.5 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white hover:border-slate-700 text-xs font-mono font-bold flex items-center gap-1.5 transition">
+
+      <!-- CLI Drawer Toggle -->
+      <button onclick="toggleTerminal()" class="px-2.5 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white hover:border-slate-700 text-xs font-mono font-bold flex items-center gap-1.5 transition" title="In-Browser Unix Shell (~) ">
         <i class="fa-solid fa-terminal text-cyan-400"></i> CLI
       </button>
-      <button onclick="toggleChaosPanel()" class="px-2.5 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-amber-400 hover:border-slate-700 text-xs font-mono font-bold flex items-center gap-1.5 transition">
+
+      <!-- Chaos Engineering Toggle -->
+      <button onclick="toggleChaosPanel()" class="px-2.5 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-amber-400 hover:border-slate-700 text-xs font-mono font-bold flex items-center gap-1.5 transition" title="Chaos Engineering Switchboard (C)">
         <i class="fa-solid fa-bolt-lightning text-amber-400"></i> Chaos
+      </button>
+
+      <!-- Hotkeys Cheatsheet Toggle -->
+      <button onclick="toggleHotkeysModal()" class="px-2 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white hover:border-slate-700 text-xs font-mono font-bold flex items-center transition" title="Keyboard Shortcuts Cheatsheet (?)">
+        <i class="fa-solid fa-keyboard"></i>
       </button>
     </div>
     
@@ -207,7 +232,8 @@
           <span>P95: <strong class="text-cyan-400" id="hud-p95">1.04ms</strong></span>
           <span>P99: <strong class="text-white" id="hud-p99">1.18ms</strong></span>
           <span>Jitter: <strong class="text-slate-300" id="hud-jitter">±0.08ms</strong></span>
-          <span>Memory Heap: <strong class="text-slate-300">48.2 MB</strong></span>
+          <span>Heap: <strong class="text-slate-300">48.2 MB</strong></span>
+          <span>SLA: <strong class="text-emerald-400">99.995%</strong></span>
         </div>
       </div>
 
@@ -358,6 +384,73 @@
             <canvas id="meshCanvas" class="w-full h-full block"></canvas>
             <div class="absolute bottom-2 left-3 text-[10px] font-mono text-slate-500">
               Interactive Nodes: Click any node to inspect telemetry and protocols
+            </div>
+          </div>
+        </div>
+
+        <!-- Infrastructure Service Health & SLA Matrix -->
+        <div class="glass-card rounded-2xl p-4 border border-slate-800 space-y-3 font-mono text-xs">
+          <div class="flex items-center justify-between pb-2 border-b border-slate-800">
+            <div class="flex items-center gap-2">
+              <i class="fa-solid fa-heart-pulse text-emerald-400"></i>
+              <h4 class="font-bold text-white uppercase tracking-wider">Infrastructure Service Health Matrix</h4>
+            </div>
+            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">ALL SYSTEMS NOMINAL</span>
+          </div>
+
+          <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+            <div class="p-2.5 rounded-xl bg-slate-900/80 border border-slate-800 space-y-1">
+              <div class="flex justify-between items-center text-[10px]">
+                <span class="text-slate-400">Cloudflare Edge</span>
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+              </div>
+              <div class="text-emerald-400 font-bold text-xs">99.999%</div>
+              <div class="text-[10px] text-slate-500">RTT: 0.8ms · TLS 1.3</div>
+            </div>
+
+            <div class="p-2.5 rounded-xl bg-slate-900/80 border border-slate-800 space-y-1">
+              <div class="flex justify-between items-center text-[10px]">
+                <span class="text-slate-400">Nginx Ingress</span>
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+              </div>
+              <div class="text-emerald-400 font-bold text-xs">99.995%</div>
+              <div class="text-[10px] text-slate-500">Conn: 1,420 · HTTP/2</div>
+            </div>
+
+            <div class="p-2.5 rounded-xl bg-slate-900/80 border border-slate-800 space-y-1">
+              <div class="flex justify-between items-center text-[10px]">
+                <span class="text-slate-400">Node Core Pods</span>
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+              </div>
+              <div class="text-emerald-400 font-bold text-xs">3/3 Replicas</div>
+              <div class="text-[10px] text-slate-500">Heap: 48.2MB · 12% CPU</div>
+            </div>
+
+            <div class="p-2.5 rounded-xl bg-slate-900/80 border border-slate-800 space-y-1">
+              <div class="flex justify-between items-center text-[10px]">
+                <span class="text-slate-400">Redis Mutex</span>
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+              </div>
+              <div class="text-emerald-400 font-bold text-xs">Master + 2 Sentinels</div>
+              <div class="text-[10px] text-slate-500">Ops: 18.4k/s · 0.2ms</div>
+            </div>
+
+            <div class="p-2.5 rounded-xl bg-slate-900/80 border border-slate-800 space-y-1">
+              <div class="flex justify-between items-center text-[10px]">
+                <span class="text-slate-400">PostgreSQL 15</span>
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+              </div>
+              <div class="text-emerald-400 font-bold text-xs">Primary + Replica</div>
+              <div class="text-[10px] text-slate-500">Pool: 20 · WAL Sync OK</div>
+            </div>
+
+            <div class="p-2.5 rounded-xl bg-slate-900/80 border border-slate-800 space-y-1">
+              <div class="flex justify-between items-center text-[10px]">
+                <span class="text-slate-400">AES-256 Vault</span>
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+              </div>
+              <div class="text-emerald-400 font-bold text-xs">Verified SHA-256</div>
+              <div class="text-[10px] text-slate-500">RPO: 0s · RTO: 4.2s</div>
             </div>
           </div>
         </div>
@@ -915,11 +1008,14 @@ WHERE location_city = 'Bangalore' AND inspection_passed = TRUE;</code></pre>
     renderBikes();
   
 
-    // --- MASTER ENTERPRISE v3.0 FRONTEND ARCHITECTURE SUITE ---
+    // --- MASTER ENTERPRISE v4.0 PLATFORM CONSOLE ARCHITECTURE SUITE ---
     let terminalOpen = false;
     let devToolsOpen = false;
+    let networkSnifferOpen = false;
     let commandPaletteOpen = false;
+    let hotkeysModalOpen = false;
     let packetsRunning = true;
+    let voiceEnabled = true;
     let chaosFlags = { latency: false, failover: false, circuit: false };
     let currentRegion = 'mumbai';
     const REGION_LATENCIES = { mumbai: 0.8, virginia: 182.4, frankfurt: 128.6 };
@@ -928,6 +1024,49 @@ WHERE location_city = 'Bangalore' AND inspection_passed = TRUE;</code></pre>
     const stateHistory = [];
     let currentHistoryIndex = 0;
 
+    // DevTools Network Sniffer Feed
+    const networkFrames = [];
+
+    // Catalog Data Store
+    let catalogData = [{"id": "BK-01", "name": "Ducati Panigale V4 S (2024)", "category": "1103cc Superbike", "rate": "$26,500", "status": "AVAILABLE", "ttl": 0, "region": "ap-south-1", "meta": "215hp, \u00d6hlins Smart EC 2.0, Akrapovi\u010d Full Titanium"}, {"id": "BK-02", "name": "Kawasaki Ninja ZX-10R (2023)", "category": "998cc Supersport", "rate": "$17,900", "status": "LEASED", "ttl": 360, "region": "ap-south-1", "meta": "203hp, Showa BFF Fork, Brembo M50 Monoblocs"}, {"id": "BK-03", "name": "BMW S1000RR M-Package (2024)", "category": "999cc Track Edition", "rate": "$24,200", "status": "AVAILABLE", "ttl": 0, "region": "us-east-1", "meta": "205hp, Carbon M-Wheels, ShiftCam Technology"}, {"id": "BK-04", "name": "Yamaha YZF-R1 World GP (2022)", "category": "998cc Crossplane", "rate": "$15,800", "status": "AVAILABLE", "ttl": 0, "region": "eu-central-1", "meta": "200hp, CP4 Crossplane Engine, Quickshifter v2"}, {"id": "BK-05", "name": "Triumph Speed Triple 1200 RS", "category": "1160cc Naked Triple", "rate": "$16,400", "status": "AVAILABLE", "ttl": 0, "region": "ap-south-1", "meta": "180hp, Carbon Front Mudguard, Track Lap Timer"}, {"id": "BK-06", "name": "Harley-Davidson Sportster S", "category": "1250cc Power Cruiser", "rate": "$14,900", "status": "MAINTENANCE", "ttl": 0, "region": "ap-south-1", "meta": "Revolution Max 1250T, Bluetooth Headset Sync"}];
+    let currentSortColumn = 'id';
+    let currentSortAsc = true;
+    let currentStatusFilter = 'ALL';
+    let currentSearchTerm = '';
+
+    // Web Speech Synthesis Engine
+    function speakAnnouncement(text) {
+      if (!voiceEnabled || !('speechSynthesis' in window)) return;
+      try {
+        window.speechSynthesis.cancel();
+        const utter = new SpeechSynthesisUtterance(text);
+        utter.rate = 1.05;
+        utter.pitch = 1.0;
+        utter.volume = 0.85;
+        window.speechSynthesis.speak(utter);
+      } catch(e) {
+        console.warn('SpeechSynthesis error:', e);
+      }
+    }
+
+    function toggleVoiceAnnouncements() {
+      voiceEnabled = !voiceEnabled;
+      playBeep(voiceEnabled ? 880 : 380);
+      const icon = document.getElementById("voice-icon");
+      const label = document.getElementById("voice-label");
+      if (voiceEnabled) {
+        icon.className = "fa-solid fa-volume-high text-emerald-400";
+        label.innerText = "Voice: ON";
+        speakAnnouncement("Voice audio notifications activated.");
+      } else {
+        icon.className = "fa-solid fa-volume-xmark text-slate-500";
+        label.innerText = "Voice: OFF";
+      }
+      recordStateMutation('VOICE_TOGGLE', { enabled: voiceEnabled });
+      logEvent("VOICE_ENGINE", `Voice synthesizer ${voiceEnabled ? 'ENABLED' : 'MUTED'}`, "text-cyan-400");
+    }
+
+    // State Mutation & DevTools Recorder
     function recordStateMutation(actionType, payload) {
       const snapshot = {
         action: actionType,
@@ -981,6 +1120,65 @@ WHERE location_city = 'Bangalore' AND inspection_passed = TRUE;</code></pre>
       else d.classList.add("translate-x-full");
     }
 
+    // Network Sniffer Engine
+    function recordNetworkFrame(method, path, status, latencyMs, sizeBytes, payload) {
+      const frame = {
+        id: 'req-' + Math.random().toString(36).substring(2, 9),
+        time: new Date().toLocaleTimeString(),
+        method: method,
+        path: path,
+        status: status,
+        latency: latencyMs,
+        size: sizeBytes,
+        payload: payload,
+        region: currentRegion
+      };
+      networkFrames.unshift(frame);
+      if (networkFrames.length > 50) networkFrames.pop();
+      renderNetworkSniffer();
+    }
+
+    function renderNetworkSniffer() {
+      const container = document.getElementById("sniffer-traffic-list");
+      const totalCount = document.getElementById("sniffer-total-count");
+      if (!container) return;
+      if (totalCount) totalCount.innerText = networkFrames.length;
+
+      if (networkFrames.length === 0) {
+        container.innerHTML = `<div class="p-4 text-center text-slate-500 italic">No network frames captured yet.</div>`;
+        return;
+      }
+
+      container.innerHTML = networkFrames.map(f => `
+        <div onclick='openEntityInspector("${f.id}", ${JSON.stringify(JSON.stringify(f))})' 
+             class="p-2.5 rounded-xl border border-slate-800/80 bg-slate-900/60 hover:bg-slate-800/80 cursor-pointer flex items-center justify-between text-[11px] font-mono transition">
+          <div class="flex items-center gap-2">
+            <span class="px-1.5 py-0.5 rounded text-[10px] font-bold ${f.method === 'POST' ? 'bg-cyan-500/20 text-cyan-400' : 'bg-emerald-500/20 text-emerald-400'}">${f.method}</span>
+            <span class="text-white font-bold truncate max-w-[170px] sm:max-w-[210px]">${f.path}</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-400">${f.status}</span>
+            <span class="text-slate-400 text-[10px]">${f.latency}ms</span>
+            <span class="text-slate-500 text-[10px]">${f.size}B</span>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function clearNetworkSniffer() {
+      playBeep(420);
+      networkFrames.length = 0;
+      renderNetworkSniffer();
+    }
+
+    function toggleNetworkSniffer() {
+      playBeep(640);
+      networkSnifferOpen = !networkSnifferOpen;
+      const d = document.getElementById("network-sniffer-drawer");
+      if (networkSnifferOpen) d.classList.remove("translate-x-full");
+      else d.classList.add("translate-x-full");
+    }
+
     // Theme Switcher Engine
     function switchTheme(theme) {
       playBeep(720);
@@ -998,9 +1196,14 @@ WHERE location_city = 'Bangalore' AND inspection_passed = TRUE;</code></pre>
       { id: 'nav-3', title: '3. Concurrency & Chaos Labs', icon: 'fa-vial', action: () => switchTab('scenarios') },
       { id: 'nav-4', title: '4. Database EXPLAIN ANALYZE Profiler', icon: 'fa-database', action: () => switchTab('profiler') },
       { id: 'nav-5', title: '5. DevOps, Cloud & K8s Specs', icon: 'fa-server', action: () => switchTab('devops') },
+      { id: 'act-sniff', title: 'Toggle DevTools Network Sniffer', icon: 'fa-network-wired', action: toggleNetworkSniffer },
+      { id: 'act-voice', title: 'Toggle Voice Audio Speech Synthesizer', icon: 'fa-volume-high', action: toggleVoiceAnnouncements },
       { id: 'act-cli', title: 'Toggle In-Browser CLI Shell', icon: 'fa-terminal', action: toggleTerminal },
       { id: 'act-chaos', title: 'Open Chaos Engineering Switchboard', icon: 'fa-bolt-lightning', action: toggleChaosPanel },
       { id: 'act-devtools', title: 'Open State & Time-Travel DevTools', icon: 'fa-clock-rotate-left', action: toggleDevTools },
+      { id: 'act-keys', title: 'Show Keyboard Shortcuts Cheatsheet', icon: 'fa-keyboard', action: toggleHotkeysModal },
+      { id: 'exp-csv', title: 'Export Catalog to CSV (RFC 4180)', icon: 'fa-file-csv', action: exportDataToCSV },
+      { id: 'exp-json', title: 'Export Catalog to JSON', icon: 'fa-file-code', action: exportDataToJSON },
       { id: 'reg-mum', title: 'Switch Region: ap-south-1 (Mumbai Hub)', icon: 'fa-location-dot', action: () => { document.getElementById('region-selector').value = 'mumbai'; changeDatacenter('mumbai'); } },
       { id: 'reg-vir', title: 'Switch Region: us-east-1 (N. Virginia)', icon: 'fa-location-dot', action: () => { document.getElementById('region-selector').value = 'virginia'; changeDatacenter('virginia'); } },
       { id: 'reg-fra', title: 'Switch Region: eu-central-1 (Frankfurt)', icon: 'fa-location-dot', action: () => { document.getElementById('region-selector').value = 'frankfurt'; changeDatacenter('frankfurt'); } },
@@ -1077,15 +1280,240 @@ WHERE location_city = 'Bangalore' AND inspection_passed = TRUE;</code></pre>
       }
     }
 
-    // Global Key Listener for Cmd+K / Ctrl+K
+    // Global Key Listener for Power Hotkeys
     window.addEventListener('keydown', (e) => {
+      // Cmd+K / Ctrl+K
       if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
         e.preventDefault();
         if (commandPaletteOpen) closeCommandPalette();
         else openCommandPalette();
+        return;
       }
-      if (e.key === 'Escape' && commandPaletteOpen) closeCommandPalette();
+      // ESC closes everything
+      if (e.key === 'Escape') {
+        if (commandPaletteOpen) closeCommandPalette();
+        if (hotkeysModalOpen) toggleHotkeysModal();
+        if (document.getElementById("chaos-modal") && !document.getElementById("chaos-modal").classList.contains("hidden")) toggleChaosPanel();
+        if (document.getElementById("entity-inspector-modal") && !document.getElementById("entity-inspector-modal").classList.contains("hidden")) closeEntityInspector();
+        if (networkSnifferOpen) toggleNetworkSniffer();
+        if (devToolsOpen) toggleDevTools();
+        if (terminalOpen) toggleTerminal();
+        return;
+      }
+      // Hotkeys when not inside input / textarea
+      if (['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement.tagName)) return;
+
+      if (e.key === '`' || e.key === '~') {
+        e.preventDefault();
+        toggleTerminal();
+      } else if (e.key === 'd' || e.key === 'D') {
+        e.preventDefault();
+        toggleDevTools();
+      } else if (e.key === 'n' || e.key === 'N') {
+        e.preventDefault();
+        toggleNetworkSniffer();
+      } else if (e.key === 'c' || e.key === 'C') {
+        e.preventDefault();
+        toggleChaosPanel();
+      } else if (e.key === 'v' || e.key === 'V') {
+        e.preventDefault();
+        toggleVoiceAnnouncements();
+      } else if (e.key === '?') {
+        e.preventDefault();
+        toggleHotkeysModal();
+      } else if (['1', '2', '3', '4', '5'].includes(e.key)) {
+        const tabMap = { '1': 'console', '2': 'topology', '3': 'scenarios', '4': 'profiler', '5': 'devops' };
+        switchTab(tabMap[e.key]);
+      }
     });
+
+    function toggleHotkeysModal() {
+      playBeep(640);
+      hotkeysModalOpen = !hotkeysModalOpen;
+      document.getElementById("hotkeys-modal").classList.toggle("hidden");
+    }
+
+    // Entity Inspector Modal
+    function openEntityInspector(title, jsonStr) {
+      playBeep(600);
+      document.getElementById("inspector-title").innerHTML = `<i class="fa-solid fa-code text-cyan-400"></i> $Verified Superbike Inspector: ` + title;
+      try {
+        const parsed = typeof jsonStr === 'string' ? JSON.parse(jsonStr) : jsonStr;
+        document.getElementById("inspector-body").innerText = JSON.stringify(parsed, null, 2);
+      } catch(e) {
+        document.getElementById("inspector-body").innerText = jsonStr;
+      }
+      document.getElementById("entity-inspector-modal").classList.remove("hidden");
+    }
+
+    function closeEntityInspector() {
+      document.getElementById("entity-inspector-modal").classList.add("hidden");
+    }
+
+    // Reactive Production Data Table Logic
+    function renderCatalogTable() {
+      const tbody = document.getElementById("catalog-table-body");
+      if (!tbody) return;
+
+      // Filter
+      let filtered = catalogData.filter(item => {
+        const matchSearch = currentSearchTerm === '' || 
+          item.id.toLowerCase().includes(currentSearchTerm) ||
+          item.name.toLowerCase().includes(currentSearchTerm) ||
+          item.category.toLowerCase().includes(currentSearchTerm) ||
+          item.region.toLowerCase().includes(currentSearchTerm);
+
+        const matchStatus = currentStatusFilter === 'ALL' || item.status === currentStatusFilter;
+        return matchSearch && matchStatus;
+      });
+
+      // Sort
+      filtered.sort((a, b) => {
+        let valA = a[currentSortColumn];
+        let valB = b[currentSortColumn];
+        if (typeof valA === 'string') valA = valA.toLowerCase();
+        if (typeof valB === 'string') valB = valB.toLowerCase();
+        if (valA < valB) return currentSortAsc ? -1 : 1;
+        if (valA > valB) return currentSortAsc ? 1 : -1;
+        return 0;
+      });
+
+      document.getElementById("table-display-count").innerText = filtered.length;
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" class="p-6 text-center text-slate-500 italic">No matching records found in local registry.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = filtered.map(item => `
+        <tr class="hover:bg-slate-900/40 transition">
+          <td class="p-3 font-bold text-cyan-400 whitespace-nowrap">${item.id}</td>
+          <td class="p-3">
+            <div class="font-bold text-white">${item.name}</div>
+            <div class="text-[10px] text-slate-400">${item.meta}</div>
+          </td>
+          <td class="p-3 text-slate-300 hidden md:table-cell whitespace-nowrap">${item.category}</td>
+          <td class="p-3 font-bold text-emerald-400 whitespace-nowrap">${item.rate}</td>
+          <td class="p-3 whitespace-nowrap">
+            <span class="px-2 py-0.5 rounded text-[10px] font-bold ${
+              item.status === 'AVAILABLE' ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 
+              (item.status === 'LEASED' || item.status === 'HOT' || item.status === 'CALLING' ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30' : 'bg-rose-500/20 text-rose-400 border border-rose-500/30')
+            }">${item.status}</span>
+          </td>
+          <td class="p-3 text-slate-400 hidden sm:table-cell whitespace-nowrap">📍 ${item.region}</td>
+          <td class="p-3 text-right space-x-1.5 whitespace-nowrap">
+            <button onclick='quickToggleLease("${item.id}")' class="px-2 py-1 rounded-lg bg-slate-900 border border-slate-800 hover:border-cyan-500 hover:text-cyan-400 text-[11px] font-bold transition">
+              ${item.status === 'LEASED' ? 'Release' : 'Lease'}
+            </button>
+            <button onclick='openEntityInspector("${item.id}", ${JSON.stringify(JSON.stringify(item))})' class="px-2 py-1 rounded-lg bg-slate-900 border border-slate-800 hover:text-white text-[11px] transition" title="Inspect Raw JSON">
+              <i class="fa-solid fa-code"></i>
+            </button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function filterCatalogTable(val) {
+      currentSearchTerm = val.toLowerCase().trim();
+      renderCatalogTable();
+    }
+
+    function setTableStatusFilter(status) {
+      playBeep(520);
+      currentStatusFilter = status;
+      ['all', 'avail', 'leased', 'maint'].forEach(k => {
+        const btn = document.getElementById("filter-btn-" + k);
+        if (btn) {
+          btn.className = "px-2.5 py-1 rounded-lg text-[11px] font-bold text-slate-400 hover:text-white transition";
+        }
+      });
+      const activeMap = { 'ALL': 'all', 'AVAILABLE': 'avail', 'LEASED': 'leased', 'MAINTENANCE': 'maint' };
+      const activeBtn = document.getElementById("filter-btn-" + activeMap[status]);
+      if (activeBtn) activeBtn.className = "px-2.5 py-1 rounded-lg text-[11px] font-bold bg-cyan-600 text-white transition";
+      renderCatalogTable();
+    }
+
+    function sortCatalogTable(col) {
+      playBeep(640);
+      if (currentSortColumn === col) {
+        currentSortAsc = !currentSortAsc;
+      } else {
+        currentSortColumn = col;
+        currentSortAsc = true;
+      }
+      ['id', 'name', 'category', 'rate', 'status', 'region'].forEach(c => {
+        const el = document.getElementById("sort-icon-" + c);
+        if (el) el.innerText = "↕";
+      });
+      const activeEl = document.getElementById("sort-icon-" + col);
+      if (activeEl) activeEl.innerText = currentSortAsc ? "▲" : "▼";
+      renderCatalogTable();
+    }
+
+    function quickToggleLease(id) {
+      const item = catalogData.find(i => i.id === id);
+      if (!item) return;
+      playBeep(840);
+      const wasLeased = item.status === 'LEASED';
+      item.status = wasLeased ? 'AVAILABLE' : 'LEASED';
+      item.ttl = wasLeased ? 0 : 600;
+
+      recordNetworkFrame('POST', '/v1/mutex/lease/' + id, 200, Math.round(REGION_LATENCIES[currentRegion]), 412, { id, status: item.status, ttl: item.ttl });
+      recordStateMutation('QUICK_LEASE_TOGGLE', { id, status: item.status });
+      logEvent("MUTEX_LOCK", `Atomic lease for ${id} mutated to ${item.status} via Redis SETNX.`, "text-cyan-400");
+      renderCatalogTable();
+
+      if (!wasLeased) {
+        speakAnnouncement(`Lease lock secured for ${id}. Mutex TTL set to 600 seconds.`);
+      }
+    }
+
+    function reloadCatalogTable() {
+      playBeep(720);
+      renderCatalogTable();
+      recordNetworkFrame('GET', '/v1/catalog/sync', 200, Math.round(REGION_LATENCIES[currentRegion]), 1024, { sync: true });
+      logEvent("CATALOG_SYNC", "Synchronized catalog state with PostgreSQL 15 primary.", "text-emerald-400");
+    }
+
+    // Export Table Data to CSV
+    function exportDataToCSV() {
+      playBeep(880);
+      const headers = ["id", "name", "category", "rate", "status", "ttl", "region", "meta"];
+      const rows = catalogData.map(i => [
+        `"${i.id}"`,
+        `"${i.name.replace(/"/g, '""')}"`,
+        `"${i.category}"`,
+        `"${i.rate}"`,
+        `"${i.status}"`,
+        i.ttl,
+        `"${i.region}"`,
+        `"${i.meta.replace(/"/g, '""')}"`
+      ]);
+      const csvContent = "data:text/csv;charset=utf-8," + [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement("a");
+      link.setAttribute("href", encodedUri);
+      link.setAttribute("download", `mototrade-catalog-export.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      logEvent("DATA_EXPORT", "Exported MotoTrade catalog to CSV format.", "text-emerald-400");
+      speakAnnouncement("Catalog successfully exported as CSV spreadsheet.");
+    }
+
+    // Export Table Data to JSON
+    function exportDataToJSON() {
+      playBeep(880);
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(catalogData, null, 2));
+      const link = document.createElement("a");
+      link.setAttribute("href", dataStr);
+      link.setAttribute("download", `mototrade-catalog-export.json`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      logEvent("DATA_EXPORT", "Exported MotoTrade catalog to formatted JSON.", "text-emerald-400");
+      speakAnnouncement("Catalog successfully exported as JSON document.");
+    }
 
     // Interactive In-Browser API Playground Simulator
     function executeApiPlaygroundRequest() {
@@ -1127,7 +1555,9 @@ WHERE location_city = 'Bangalore' AND inspection_passed = TRUE;</code></pre>
         };
         respBox.innerText = JSON.stringify(simulatedPayload, null, 2);
         recordStateMutation('API_PLAYGROUND_CALL', { method, url, latency: rtt, correlationId: reqId });
+        recordNetworkFrame(method, url.replace('https://api.mototrade.io', ''), 200, rtt, 542, simulatedPayload);
         logEvent("API_SANDBOX", `${method} ${url} returned 200 OK (${rtt}ms).`, "text-cyan-400");
+        speakAnnouncement("Inspection report loaded for Ducati Panigale V4. Escrow verification passed.");
       }, Math.min(rtt, 350));
     }
 
@@ -1162,6 +1592,7 @@ WHERE location_city = 'Bangalore' AND inspection_passed = TRUE;</code></pre>
       chaosFlags[flag] = document.getElementById("chaos-" + flag).checked;
       recordStateMutation('CHAOS_FLAG_TOGGLE', { flag, enabled: chaosFlags[flag] });
       logEvent("CHAOS_ENGINE", `Toggled chaos parameter [${flag.toUpperCase()}] = ${chaosFlags[flag]}`, "text-amber-400");
+      if (chaosFlags[flag]) speakAnnouncement(`Chaos injection active: ${flag} enabled.`);
     }
 
     function changeDatacenter(val) {
@@ -1173,6 +1604,7 @@ WHERE location_city = 'Bangalore' AND inspection_passed = TRUE;</code></pre>
       document.getElementById("hud-p95").innerText = (baseLat * 1.3).toFixed(2) + 'ms';
       document.getElementById("hud-p99").innerText = (baseLat * 1.5).toFixed(2) + 'ms';
       recordStateMutation('REGION_CHANGE', { region: val, baseLatency: baseLat });
+      recordNetworkFrame('POST', '/v1/routing/switch', 200, Math.round(baseLat), 256, { newRegion: val });
       logEvent("REGION_ROUTE", `Routing diverted to ${val.toUpperCase()} region (${baseLat}ms RTT).`, "text-cyan-400");
     }
 
@@ -1197,12 +1629,14 @@ WHERE location_city = 'Bangalore' AND inspection_passed = TRUE;</code></pre>
             - <strong class="text-white">metrics</strong>: Display Prometheus scrape metrics<br>
             - <strong class="text-white">explain</strong>: Run database EXPLAIN ANALYZE<br>
             - <strong class="text-white">ping</strong>: Measure gateway latency<br>
+            - <strong class="text-white">voice</strong>: Toggle Web Speech voice audio<br>
+            - <strong class="text-white">export &lt;csv|json&gt;</strong>: Download catalog data<br>
             - <strong class="text-white">chaos</strong>: View active chaos engineering flags<br>
             - <strong class="text-white">theme &lt;slate|cyberpunk|matrix&gt;</strong>: Switch color palette<br>
             - <strong class="text-white">clear</strong>: Clear terminal screen
           </div>`;
       } else if (action === 'status') {
-        term.innerHTML += `<div class="text-cyan-300 pl-4">{"service": "MotoTrade", "region": "${currentRegion}", "status": "HEALTHY", "activeLocks": 1, "memory": "48.2MB"}</div>`;
+        term.innerHTML += `<div class="text-cyan-300 pl-4">{"service": "MotoTrade", "region": "${currentRegion}", "status": "HEALTHY", "activeRecords": ${catalogData.length}, "memory": "48.2MB"}</div>`;
       } else if (action === 'metrics') {
         term.innerHTML += `<div class="text-emerald-300 pl-4"># HELP http_requests_total\nhttp_requests_total{region="${currentRegion}"} 1420\n# HELP p99_latency_seconds\np99_latency_seconds 0.00118</div>`;
       } else if (action === 'explain') {
@@ -1210,6 +1644,13 @@ WHERE location_city = 'Bangalore' AND inspection_passed = TRUE;</code></pre>
         term.innerHTML += `<div class="text-cyan-300 pl-4">Executed EXPLAIN ANALYZE on primary table. View SQL Profiler tab for full tree.</div>`;
       } else if (action === 'ping') {
         term.innerHTML += `<div class="text-emerald-400 pl-4">64 bytes from ${currentRegion}.edge: icmp_seq=1 time=${REGION_LATENCIES[currentRegion]} ms</div>`;
+      } else if (action === 'voice') {
+        toggleVoiceAnnouncements();
+        term.innerHTML += `<div class="text-emerald-400 pl-4">Voice speech synthesis toggled: ${voiceEnabled ? 'ON' : 'OFF'}</div>`;
+      } else if (action === 'export') {
+        if (parts[1] === 'csv') exportDataToCSV();
+        else exportDataToJSON();
+        term.innerHTML += `<div class="text-emerald-400 pl-4">Triggered catalog download for ${parts[1] || 'json'}.</div>`;
       } else if (action === 'chaos') {
         term.innerHTML += `<div class="text-amber-400 pl-4">Chaos Flags: ${JSON.stringify(chaosFlags)}</div>`;
       } else if (action === 'theme' && parts[1]) {
@@ -1400,8 +1841,15 @@ WHERE location_city = 'Bangalore' AND inspection_passed = TRUE;</code></pre>
       recordStateMutation('TAB_NAVIGATE', { tab: tabId });
     };
 
-    // Record Initial State
-    recordStateMutation('INIT_ENGINE', { service: 'MotoTrade', status: 'READY', version: '2.5' });
+    // Initial Startup Routine
+    window.addEventListener('DOMContentLoaded', () => {
+      renderCatalogTable();
+      renderJitterCanvas();
+      recordStateMutation('INIT_ENGINE', { service: 'MotoTrade', status: 'READY', version: '4.0' });
+      recordNetworkFrame('GET', '/v1/healthz', 200, 0.8, 128, { status: 'UP' });
+      recordNetworkFrame('GET', '/v1/readyz', 200, 0.9, 142, { db: 'CONNECTED', redis: 'CONNECTED' });
+    });
+    setTimeout(renderCatalogTable, 100);
     setTimeout(renderJitterCanvas, 300);
     
 </script>
@@ -1411,14 +1859,14 @@ WHERE location_city = 'Bangalore' AND inspection_passed = TRUE;</code></pre>
     <div class="glass-card rounded-2xl max-w-xl w-full p-4 space-y-3 border border-slate-700 shadow-2xl animate-in fade-in font-mono text-xs">
       <div class="flex items-center gap-2 pb-2 border-b border-slate-800">
         <i class="fa-solid fa-magnifying-glass text-cyan-400 text-sm"></i>
-        <input type="text" id="palette-search-input" placeholder="Type command, navigation, or action (e.g. 'lock', 'topology', 'mumbai')..." 
+        <input type="text" id="palette-search-input" placeholder="Type command, navigation, or action (e.g. 'lock', 'sniffer', 'export', 'voice')..." 
                class="flex-1 bg-transparent text-white focus:outline-none text-xs" oninput="filterPaletteCommands(this.value)" onkeydown="handlePaletteKeydown(event)">
         <kbd class="px-1.5 py-0.5 rounded bg-slate-800 text-[10px] text-slate-400 border border-slate-700">ESC</kbd>
       </div>
       <div id="palette-items-list" class="max-h-64 overflow-y-auto space-y-1 pr-1"></div>
       <div class="pt-2 border-t border-slate-800/80 flex items-center justify-between text-[10px] text-slate-500">
         <span>Navigation: <kbd class="text-slate-400">↑↓</kbd> to select, <kbd class="text-slate-400">↵</kbd> to execute</span>
-        <span>MotoTrade Global Command Center</span>
+        <span>MotoTrade Autonomous Platform Console</span>
       </div>
     </div>
   </div>
@@ -1442,9 +1890,33 @@ WHERE location_city = 'Bangalore' AND inspection_passed = TRUE;</code></pre>
       <input type="range" id="time-travel-slider" min="0" max="0" value="0" oninput="scrubHistory(this.value)" class="w-full accent-cyan-500 cursor-pointer">
     </div>
 
-    <!-- Action Stream & State JSON Tabs -->
+    <!-- Action Stream Container -->
     <div class="flex-1 overflow-y-auto p-3 space-y-2" id="devtools-action-stream">
       <div class="text-[11px] text-slate-500 italic">No actions dispatched yet. Perform any UI interaction to record state snapshots.</div>
+    </div>
+  </div>
+
+  <!-- DevTools Network Traffic Sniffer Drawer -->
+  <div id="network-sniffer-drawer" class="fixed top-0 bottom-0 right-0 z-50 w-full sm:w-[500px] bg-slate-950/95 backdrop-blur-md border-l border-slate-800 shadow-2xl transition-all duration-300 transform translate-x-full flex flex-col font-mono text-xs">
+    <div class="flex items-center justify-between p-3.5 border-b border-slate-800 bg-slate-900/80">
+      <div class="flex items-center gap-2">
+        <i class="fa-solid fa-network-wired text-cyan-400"></i>
+        <span class="text-white font-bold">Network Traffic Sniffer (HTTP/2 & WS)</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <button onclick="clearNetworkSniffer()" class="px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 text-[10px]">Clear</button>
+        <button onclick="toggleNetworkSniffer()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+    </div>
+
+    <!-- Traffic Feed Table -->
+    <div class="flex-1 overflow-y-auto p-2 space-y-1.5" id="sniffer-traffic-list">
+      <!-- Injected reactively -->
+    </div>
+
+    <div class="p-3 bg-slate-900/80 border-t border-slate-800 flex items-center justify-between text-[10px] text-slate-500">
+      <span>Protocol: HTTP/2 Multiplexed + RESP3 Mutex</span>
+      <span>Total Frames: <strong class="text-cyan-400" id="sniffer-total-count">0</strong></span>
     </div>
   </div>
 
@@ -1466,7 +1938,7 @@ WHERE location_city = 'Bangalore' AND inspection_passed = TRUE;</code></pre>
     </div>
     <div id="terminal-output" class="flex-1 p-4 overflow-y-auto space-y-1 text-slate-300">
       <div class="text-cyan-400">Connected to MotoTrade Enterprise Engine (Region: ap-south-1).</div>
-      <div class="text-slate-400">Available commands: <code class="text-white">help, status, inspect BK-01, explain, metrics, ping, clear</code></div>
+      <div class="text-slate-400">Available commands: <code class="text-white">help, status, inspect BK-01, explain, metrics, ping, voice, export, clear</code></div>
     </div>
     <div class="flex items-center px-4 py-2 bg-slate-900/90 border-t border-slate-800">
       <span class="text-emerald-400 font-bold mr-2">mototrade:~$ </span>
@@ -1515,6 +1987,81 @@ WHERE location_city = 'Bangalore' AND inspection_passed = TRUE;</code></pre>
       <div class="pt-3 border-t border-slate-800 flex justify-end">
         <button onclick="toggleChaosPanel()" class="px-4 py-2 rounded-xl bg-amber-600 hover:bg-amber-500 text-white font-bold text-xs">
           Close Switchboard
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Keyboard Shortcuts Cheatsheet Modal -->
+  <div id="hotkeys-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="glass-card rounded-2xl max-w-lg w-full p-6 space-y-4 border border-cyan-500/30 shadow-2xl animate-in fade-in font-mono text-xs">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+        <h3 class="text-base font-bold text-white flex items-center gap-2">
+          <i class="fa-solid fa-keyboard text-cyan-400"></i> Platform Keyboard Shortcuts
+        </h3>
+        <button onclick="toggleHotkeysModal()" class="w-7 h-7 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center">
+          <i class="fa-solid fa-xmark text-sm"></i>
+        </button>
+      </div>
+
+      <div class="space-y-2 divide-y divide-slate-800/80">
+        <div class="flex items-center justify-between py-1.5">
+          <span class="text-slate-300">Spotlight Command Menu</span>
+          <kbd class="px-2 py-0.5 rounded bg-slate-800 text-cyan-400 border border-slate-700 font-bold">⌘K / Ctrl+K</kbd>
+        </div>
+        <div class="flex items-center justify-between py-1.5">
+          <span class="text-slate-300">Toggle In-Browser Unix Terminal</span>
+          <kbd class="px-2 py-0.5 rounded bg-slate-800 text-cyan-400 border border-slate-700 font-bold">~ / `</kbd>
+        </div>
+        <div class="flex items-center justify-between py-1.5">
+          <span class="text-slate-300">Toggle Network Traffic Sniffer</span>
+          <kbd class="px-2 py-0.5 rounded bg-slate-800 text-cyan-400 border border-slate-700 font-bold">N</kbd>
+        </div>
+        <div class="flex items-center justify-between py-1.5">
+          <span class="text-slate-300">Toggle State DevTools & Time-Travel</span>
+          <kbd class="px-2 py-0.5 rounded bg-slate-800 text-cyan-400 border border-slate-700 font-bold">D</kbd>
+        </div>
+        <div class="flex items-center justify-between py-1.5">
+          <span class="text-slate-300">Toggle Chaos Switchboard</span>
+          <kbd class="px-2 py-0.5 rounded bg-slate-800 text-cyan-400 border border-slate-700 font-bold">C</kbd>
+        </div>
+        <div class="flex items-center justify-between py-1.5">
+          <span class="text-slate-300">Toggle Voice Speech Synthesis</span>
+          <kbd class="px-2 py-0.5 rounded bg-slate-800 text-cyan-400 border border-slate-700 font-bold">V</kbd>
+        </div>
+        <div class="flex items-center justify-between py-1.5">
+          <span class="text-slate-300">Switch Platform Tabs</span>
+          <kbd class="px-2 py-0.5 rounded bg-slate-800 text-cyan-400 border border-slate-700 font-bold">1 - 5</kbd>
+        </div>
+        <div class="flex items-center justify-between py-1.5">
+          <span class="text-slate-300">Close Any Modal or Drawer</span>
+          <kbd class="px-2 py-0.5 rounded bg-slate-800 text-cyan-400 border border-slate-700 font-bold">ESC</kbd>
+        </div>
+      </div>
+
+      <div class="pt-3 border-t border-slate-800 flex justify-end">
+        <button onclick="toggleHotkeysModal()" class="px-4 py-2 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-xs">
+          Got It
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Entity Raw Metadata Inspector Modal -->
+  <div id="entity-inspector-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="glass-card rounded-2xl max-w-lg w-full p-6 space-y-3 border border-slate-700 shadow-2xl animate-in fade-in font-mono text-xs">
+      <div class="flex items-center justify-between pb-2 border-b border-slate-800">
+        <h3 class="text-sm font-bold text-white flex items-center gap-2" id="inspector-title">
+          <i class="fa-solid fa-code text-cyan-400"></i> Entity Metadata
+        </h3>
+        <button onclick="closeEntityInspector()" class="w-7 h-7 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center">
+          <i class="fa-solid fa-xmark text-sm"></i>
+        </button>
+      </div>
+      <pre id="inspector-body" class="p-3 bg-slate-900 rounded-xl text-emerald-300 font-mono text-[11px] max-h-80 overflow-y-auto"></pre>
+      <div class="pt-2 border-t border-slate-800 flex justify-end">
+        <button onclick="closeEntityInspector()" class="px-4 py-1.5 rounded-xl bg-slate-800 text-white font-bold text-xs">
+          Close
         </button>
       </div>
     </div>
