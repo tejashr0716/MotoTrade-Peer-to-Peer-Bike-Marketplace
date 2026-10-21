@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    container_name: mototrade-engine
+    restart: always
+    ports:
+      - "3008:3008"
+    environment:
+      - PORT=3008
+      - NODE_ENV=production
+      - DATABASE_URL=postgres://postgres:securepass@db:5432/mototrade_db
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      - db
+      - redis
+    networks:
+      - internal_net
+
+  db:
+    image: postgres:15-alpine
+    container_name: mototrade-db
+    restart: always
+    environment:
+      POSTGRES_DB: mototrade_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: securepass
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./schema.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - internal_net
+
+  redis:
+    image: redis:7-alpine
+    container_name: mototrade-redis
+    restart: always
+    command: redis-server --appendonly yes
+    volumes:
+      - redisdata:/data
+    networks:
+      - internal_net
+
+volumes:
+  pgdata:
+  redisdata:
+
+networks:
+  internal_net:
+    driver: bridge
